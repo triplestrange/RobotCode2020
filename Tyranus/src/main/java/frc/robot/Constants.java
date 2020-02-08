@@ -118,4 +118,40 @@ public final class Constants {
           kMaxAngularSpeedRadiansPerSecondSquared);
 
   }
+
+  public static final class Intake {
+    public static final int MOTOR = 1;
+  }
+
+  public static class Controller {
+    public final static int A = 1;
+    public final static int B = 2;
+    public final static int X = 3;
+    public final static int Y = 4;
+    public final static int LEFT_BUMPER = 5;
+    public final static int RIGHT_BUMPER = 6;
+    public final static int LEFT_FACE = 7;
+    public final static int RIGHT_FACE = 8;
+    public final static int JOY_LEFT = 9;
+    public final static int JOY_RIGHT = 10;
+
+    public final static int LX = 0;
+    public final static int LY = 1;
+    public final static int LT = 2;
+    public final static int RT = 3;
+    public final static int RX = 4;
+    public final static int RY = 5;
+
+    public final static int UP = 0;
+    public final static int RIGHT = 90;
+    public final static int DOWN = 180;
+    public final static int LEFT = 270;
+
+}
+    
+
+
+
+
+
 }
