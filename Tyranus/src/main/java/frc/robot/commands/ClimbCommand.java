@@ -10,46 +10,37 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.OI;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ClimbSubsystem;
 
-public class IntakeCommand extends CommandBase {
-
-  private final IntakeSubsystem m_intake;
+public class ClimbCommand extends CommandBase {
+  private final ClimbSubsystem m_climb;
   private int m_dir;
   public double y;
-    /**
-   * Creates a new Intake.
+  /**
+   * Creates a new ClimbCommand.
    */
-  public IntakeCommand(IntakeSubsystem intake) {
-    m_intake = intake;
-    m_dir = -1;
-    addRequirements(intake);
-  }
-
-  public IntakeCommand(IntakeSubsystem intake, int dir) {
-    m_intake = intake;
-    dir = -1;
-    addRequirements(intake);
+  public ClimbCommand(ClimbSubsystem climb) {
+    m_climb = climb;
+     m_dir = -1;
+    addRequirements(climb);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-      
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if (m_dir == 1){
-      y = OI.joy2.getRawAxis(Constants.Controller.LT);
-      m_intake.rollWheels(y);
+      y = OI.joy2.getRawAxis(Constants.Controller.LX);
+      m_climb.liftUp(y);
   }
     else if (m_dir == -1) {
-      y = OI.joy2.getRawAxis(Constants.Controller.RT);
-      m_intake.rollWheels(y);
+      y = OI.joy2.getRawAxis(Constants.Controller.RX);
+      m_climb.lowerDown(y);
     }
-    
   }
 
   public int getDir() {

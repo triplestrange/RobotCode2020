@@ -123,6 +123,11 @@ public final class Constants {
     public static final int MOTOR = 1;
   }
 
+  public static final class Climb {
+    public static final int L_MOTOR = 0;
+    public static final int R_MOTOR = 1;
+  }
+
   public static class Controller {
     public final static int A = 1;
     public final static int B = 2;
