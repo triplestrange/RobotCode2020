@@ -7,7 +7,9 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
@@ -17,55 +19,47 @@ import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.SwerveDriveConstants;
 
 @SuppressWarnings("PMD.ExcessiveImports")
-public class DriveSubsystem extends SubsystemBase {
+public class SwerveDrive extends SubsystemBase {
   //Robot swerve modules
   private final SwerveModule m_frontLeft
-      = new SwerveModule(DriveConstants.kFrontLeftDriveMotorPort,
-                         DriveConstants.kFrontLeftTurningMotorPort,
-                         DriveConstants.kFrontLeftDriveEncoderPorts,
-                         DriveConstants.kFrontLeftTurningEncoderPorts,
-                         DriveConstants.kFrontLeftDriveEncoderReversed,
-                         DriveConstants.kFrontLeftTurningEncoderReversed);
+      = new SwerveModule(SwerveDriveConstants.frontLeftDrive,
+                         SwerveDriveConstants.frontLeftSteer,
+                         SwerveDriveConstants.frontLeftDriveEncoderReversed,
+                         SwerveDriveConstants.frontLeftSteerEncoderReversed);
 
   private final SwerveModule m_rearLeft =
-      new SwerveModule(DriveConstants.kRearLeftDriveMotorPort,
-                       DriveConstants.kRearLeftTurningMotorPort,
-                       DriveConstants.kRearLeftDriveEncoderPorts,
-                       DriveConstants.kRearLeftTurningEncoderPorts,
-                       DriveConstants.kRearLeftDriveEncoderReversed,
-                       DriveConstants.kRearLeftTurningEncoderReversed);
+      new SwerveModule(SwerveDriveConstants.backLeftDrive,
+                       SwerveDriveConstants.backLeftSteer,
+                       SwerveDriveConstants.backLeftDriveEncoderReversed,
+                       SwerveDriveConstants.backLeftSteerEncoderReversed);
 
 
   private final SwerveModule m_frontRight =
-      new SwerveModule(DriveConstants.kFrontRightDriveMotorPort,
-                       DriveConstants.kFrontRightTurningMotorPort,
-                       DriveConstants.kFrontRightDriveEncoderPorts,
-                       DriveConstants.kFrontRightTurningEncoderPorts,
-                       DriveConstants.kFrontRightDriveEncoderReversed,
-                       DriveConstants.kFrontRightTurningEncoderReversed);
+      new SwerveModule(SwerveDriveConstants.frontRightDrive,
+                       SwerveDriveConstants.frontRightSteer,
+                       SwerveDriveConstants.frontRightDriveEncoderReversed,
+                       SwerveDriveConstants.frontRightSteerEncoderReversed);
 
   private final SwerveModule m_rearRight =
-      new SwerveModule(DriveConstants.kRearRightDriveMotorPort,
-                       DriveConstants.kRearRightTurningMotorPort,
-                       DriveConstants.kRearRightDriveEncoderPorts,
-                       DriveConstants.kRearRightTurningEncoderPorts,
-                       DriveConstants.kRearRightDriveEncoderReversed,
-                       DriveConstants.kRearRightTurningEncoderReversed);
+      new SwerveModule(SwerveDriveConstants.backRightDrive,
+                       SwerveDriveConstants.backRightSteer,
+                       SwerveDriveConstants.backRightDriveEncoderReversed,
+                       SwerveDriveConstants.backRightSteerEncoderReversed);
 
   // The gyro sensor
-  private final Gyro m_gyro = new ADXRS450_Gyro();
+  private final Gyro navX = new AHRS(SPI.Port.kMXP);
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry =
-      new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getAngle());
+      new SwerveDriveOdometry(SwerveDriveConstants.kDriveKinematics, getAngle());
 
   /**
    * Creates a new DriveSubsystem.
    */
-  public DriveSubsystem() {
+  public SwerveDrive() {
   }
 
   /**
@@ -75,7 +69,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public Rotation2d getAngle() {
     // Negating the angle because WPILib gyros are CW positive.
-    return Rotation2d.fromDegrees(m_gyro.getAngle() * (DriveConstants.kGyroReversed ? 1.0 : -1.0));
+    return Rotation2d.fromDegrees(navX.getAngle() * (SwerveDriveConstants.kGyroReversed ? 1.0 : -1.0));
   }
 
   @Override
@@ -117,13 +111,13 @@ public class DriveSubsystem extends SubsystemBase {
    */
   @SuppressWarnings("ParameterName")
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+    var swerveModuleStates = SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
             xSpeed, ySpeed, rot, getAngle())
             : new ChassisSpeeds(xSpeed, ySpeed, rot)
     );
     SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates,
-                                               DriveConstants.kMaxSpeedMetersPerSecond);
+                                               SwerveDriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
@@ -137,7 +131,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.normalizeWheelSpeeds(desiredStates,
-                                               DriveConstants.kMaxSpeedMetersPerSecond);
+                                               SwerveDriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(desiredStates[0]);
     m_frontRight.setDesiredState(desiredStates[1]);
     m_rearLeft.setDesiredState(desiredStates[2]);
@@ -167,7 +161,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the robot's heading in degrees, from 180 to 180
    */
   public double getHeading() {
-    return Math.IEEEremainder(m_gyro.getAngle(), 360) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return Math.IEEEremainder(m_gyro.getAngle(), 360) * (SwerveDriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 
   /**
@@ -176,6 +170,6 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The turn rate of the robot, in degrees per second
    */
   public double getTurnRate() {
-    return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return m_gyro.getRate() * (SwerveDriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 }

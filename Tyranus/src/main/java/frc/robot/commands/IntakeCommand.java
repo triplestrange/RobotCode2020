@@ -10,17 +10,17 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.OI;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.Intake;
 
 public class IntakeCommand extends CommandBase {
 
-  private final IntakeSubsystem m_intake;
+  private final Intake m_intake;
   private int m_dir;
   public double y;
     /**
    * Creates a new Intake.
    */
-  public IntakeCommand(IntakeSubsystem intake) {
+  public IntakeCommand(Intake intake) {
     m_intake = intake;
     m_dir = -1;
     addRequirements(intake);

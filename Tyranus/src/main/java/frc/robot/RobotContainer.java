@@ -25,9 +25,9 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.SwerveDrive;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -37,7 +37,7 @@ import frc.robot.subsystems.DriveSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems
-  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final SwerveDrive swerveDrive = new SwerveDrive();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -51,10 +51,10 @@ public class RobotContainer {
 
     // Configure default commands
     // Set the default drive command to split-stick arcade drive
-    m_robotDrive.setDefaultCommand(
+    swerveDrive.setDefaultCommand(
         // A split-stick arcade command, with forward/backward controlled by the left
         // hand, and turning controlled by the right.
-        new RunCommand(() -> m_robotDrive.drive(
+        new RunCommand(() -> swerveDrive.drive(
             m_driverController.getY(GenericHID.Hand.kLeft),
             m_driverController.getX(GenericHID.Hand.kRight),
             m_driverController.getX(GenericHID.Hand.kLeft), false)));
@@ -82,7 +82,7 @@ public class RobotContainer {
         new TrajectoryConfig(AutoConstants.kMaxSpeedMetersPerSecond,
                              AutoConstants.kMaxAccelerationMetersPerSecondSquared)
             // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(DriveConstants.kDriveKinematics);
+            .setKinematics(SwerveDriveConstants.kDriveKinematics);
 
     // An example trajectory to follow.  All units in meters.
     Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
@@ -100,8 +100,8 @@ public class RobotContainer {
 
     SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
         exampleTrajectory,
-        m_robotDrive::getPose, //Functional interface to feed supplier
-        DriveConstants.kDriveKinematics,
+        swerveDrive::getPose, //Functional interface to feed supplier
+        SwerveDriveConstants.kDriveKinematics,
 
         //Position controllers
         new PIDController(AutoConstants.kPXController, 0, 0),
@@ -109,13 +109,13 @@ public class RobotContainer {
         new ProfiledPIDController(AutoConstants.kPThetaController, 0, 0,
                                   AutoConstants.kThetaControllerConstraints),
 
-        m_robotDrive::setModuleStates,
+        swerveDrive::setModuleStates,
 
-        m_robotDrive
+        swerveDrive
 
     );
 
     // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
+    return swerveControllerCommand.andThen(() -> swerveDrive.drive(0, 0, 0, false));
   }
 }

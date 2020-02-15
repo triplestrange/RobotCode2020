@@ -9,10 +9,10 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANAnalog;
 import com.revrobotics.CANEncoder;
+import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
@@ -21,30 +21,34 @@ import frc.robot.Constants.ModuleConstants;
 
 public class SwerveModule {
   private final CANSparkMax driveMotor;
-  private final CANSparkMax turningMotor;
+  private final CANSparkMax steerMotor;
 
   private final CANEncoder driveEncoder;
-  private final CANAnalog turningEncoder;
+  private final CANAnalog steerEncoder;
+
+  private final CANPIDController drivePID;
+  private final CANPIDController steerPID;
 
   /**
    * Constructs a SwerveModule.
    *
    * @param driveMotorChannel   ID for the drive motor.
-   * @param turningMotorChannel ID for the turning motor.
+   * @param steerMotorChannel ID for the steer motor.
    */
-  public SwerveModule(int driveMotorChannel,
-                      int turningMotorChannel,
-                      int[] driveEncoderPorts,
-                      int[] turningEncoderPorts,
-                      boolean driveEncoderReversed,
-                      boolean turningEncoderReversed) {
+  public SwerveModule(int driveMotorChannel, int steerMotorChannel, int[] driveEncoderPorts,
+      int[] steerEncoderPorts, boolean driveEncoderReversed, boolean steerEncoderReversed) {
 
     driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
-    turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
+    steerMotor = new CANSparkMax(steerMotorChannel, MotorType.kBrushless);
+
+    driveMotor.restoreFactoryDefaults();
+    steerMotor.restoreFactoryDefaults();
+
+    drivePID = driveMotor.getPIDController();
+    steerPID = steerMotor.getPIDController();
 
     driveEncoder = driveMotor.getEncoder();
-
-    turningEncoder = turningMotor.getAnalog(CANAnalog.AnalogMode.kAbsolute);
+    steerEncoder = steerMotor.getAnalog(CANAnalog.AnalogMode.kAbsolute);
 
     // Set the distance per pulse for the drive encoder. We can simply use the
     // distance traveled for one rotation of the wheel divided by the encoder
@@ -52,17 +56,17 @@ public class SwerveModule {
     driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveEncoderDistancePerPulse);
     driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncoderDistancePerPulse);
 
-    //Set whether drive encoder should be reversed or not
+    // Set whether drive encoder should be reversed or not
     driveEncoder.setInverted(driveEncoderReversed);
 
-    // Set the distance (in this case, angle) per pulse for the turning encoder.
+    // Set the distance (in this case, angle) per pulse for the steer encoder.
     // This is the the angle through an entire rotation (2 * wpi::math::pi)
     // divided by the encoder resolution.
-    turningEncoder.setPositionConversionFactor(ModuleConstants.kTurningEncoderDistancePerPulse);
-    turningEncoder.setVelocityConversionFactor(ModuleConstants.kTurningEncoderDistancePerPulse);
+    steerEncoder.setPositionConversionFactor(ModuleConstants.ksteerEncoderDistancePerPulse);
+    steerEncoder.setVelocityConversionFactor(ModuleConstants.ksteerEncoderDistancePerPulse);
 
-    //Set whether turning encoder should be reversed or not
-    turningEncoder.setInverted(turningEncoderReversed);
+    // Set whether steer encoder should be reversed or not
+    steerEncoder.setInverted(steerEncoderReversed);
   }
 
   /**
@@ -71,7 +75,7 @@ public class SwerveModule {
    * @return The current state of the module.
    */
   public SwerveModuleState getState() {
-    return new SwerveModuleState(driveEncoder.getVelocity(), new Rotation2d(turningEncoder.getPosition()));
+    return new SwerveModuleState(driveEncoder.getVelocity(), new Rotation2d(steerEncoder.getPosition()));
   }
 
   /**
@@ -84,14 +88,15 @@ public class SwerveModule {
   //   // final var driveOutput = m_drivePIDController.calculate(
   //   //     driveEncoder.getRate(), state.speedMetersPerSecond);
 
-  //   // Calculate the turning motor output from the turning PID controller.
-  //   // final var turnOutput = m_turningPIDController.calculate(
-  //   //     turningEncoder.get(), state.angle.getRadians()
+  //   // Calculate the steer motor output from the steer PID controller.
+  //   // final var turnOutput = m_steerPIDController.calculate(
+  //   //     steerEncoder.get(), state.angle.getRadians()
   //   );
 
-  //   // Calculate the turning motor output from the turning PID controller.
+  //   // Calculate the steer motor output from the steer PID controller.
   //   driveMotor.set(driveOutput);
-  //   turningMotor.set(turnOutput);
+  //   steerMotor.set(turnOutput);
+
   }
 
   /**
