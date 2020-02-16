@@ -21,26 +21,20 @@ import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
  */
 public final class Constants {
   public static final class SwerveDriveConstants {
-    public static final int frontLeftDrive = 0;
-    public static final int backLeftDrive = 2;
-    public static final int frontRightDrive = 4;
-    public static final int backRightDrive = 6;
+    public static final int frontLeftDrive = 1;
+    public static final int backLeftDrive = 3;
+    public static final int frontRightDrive = 2;
+    public static final int backRightDrive = 4;
 
-    public static final int frontLeftSteer = 1;
-    public static final int backLeftSteer = 3;
-    public static final int frontRightSteer = 5;
-    public static final int backRightSteer = 7;
+    public static final int frontLeftSteer = 5;
+    public static final int backLeftSteer = 7;
+    public static final int frontRightSteer = 6;
+    public static final int backRightSteer = 8;
 
     public static final boolean frontLeftSteerEncoderReversed = false;
-    public static final boolean backLeftSteerEncoderReversed = true;
+    public static final boolean backLeftSteerEncoderReversed = false;
     public static final boolean frontRightSteerEncoderReversed = false;
-    public static final boolean backRightSteerEncoderReversed = true;
-
-    public static final boolean frontLeftDriveEncoderReversed = false;
-    public static final boolean backLeftDriveEncoderReversed = true;
-    public static final boolean frontRightDriveEncoderReversed = false;
-    public static final boolean backRightDriveEncoderReversed = true;
-
+    public static final boolean backRightSteerEncoderReversed = false;
 
     public static final double kTrackWidth = 0.46355;
     //Distance between centers of right and left wheels on robot
@@ -71,15 +65,16 @@ public final class Constants {
     public static final double kMaxModuleAngularSpeedRadiansPerSecond = 2 * Math.PI;
     public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 2 * Math.PI;
 
-    public static final int kEncoderCPR = 1024;
+    public static final double kDriveEncoderCPR = 10.5;
+    public static final double kSteerEncoderCPR = 3.3;
     public static final double kWheelDiameterMeters = 0.15;
     public static final double kDriveEncoderDistancePerPulse =
         // Assumes the encoders are directly mounted on the wheel shafts
-        (kWheelDiameterMeters * Math.PI) / (double) kEncoderCPR;
+        (kWheelDiameterMeters * Math.PI) / (double) kDriveEncoderCPR;
 
     public static final double ksteerEncoderDistancePerPulse =
         // Assumes the encoders are on a 1:1 reduction with the module shaft.
-        (2 * Math.PI) / (double) kEncoderCPR;
+        (2 * Math.PI) / (double) kSteerEncoderCPR;
 
     public static final double kPModulesteerController = 1;
 

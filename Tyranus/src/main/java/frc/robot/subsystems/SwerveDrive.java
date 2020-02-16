@@ -152,7 +152,7 @@ public class SwerveDrive extends SubsystemBase {
    * Zeroes the heading of the robot.
    */
   public void zeroHeading() {
-    m_gyro.reset();
+    navX.reset();
   }
 
   /**
@@ -161,7 +161,7 @@ public class SwerveDrive extends SubsystemBase {
    * @return the robot's heading in degrees, from 180 to 180
    */
   public double getHeading() {
-    return Math.IEEEremainder(m_gyro.getAngle(), 360) * (SwerveDriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return Math.IEEEremainder(navX.getAngle(), 360) * (SwerveDriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 
   /**
@@ -170,6 +170,6 @@ public class SwerveDrive extends SubsystemBase {
    * @return The turn rate of the robot, in degrees per second
    */
   public double getTurnRate() {
-    return m_gyro.getRate() * (SwerveDriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return navX.getRate() * (SwerveDriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 }
