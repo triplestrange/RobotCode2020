@@ -26,7 +26,7 @@ public class IntakeCommand extends CommandBase {
     addRequirements(intake);
   }
 
-  public IntakeCommand(IntakeSubsystem intake, int dir) {
+  public IntakeCommand(Intake intake, int dir) {
     m_intake = intake;
     dir = -1;
     addRequirements(intake);
