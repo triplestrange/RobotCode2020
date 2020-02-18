@@ -10,12 +10,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
-import frc.robot.OI;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.Intake;;
 
 public class IntakeCommand extends CommandBase {
 
-  private final IntakeSubsystem m_intake;
+  private final Intake m_intake;
   private int m_dir;
   public double y;
     /**
@@ -23,13 +22,13 @@ public class IntakeCommand extends CommandBase {
    */
    
 
-  public IntakeCommand(IntakeSubsystem intake) {
+  public IntakeCommand(Intake intake) {
     m_intake = intake;
     m_dir = -1;
     addRequirements(intake);
   }
 
-  public IntakeCommand(IntakeSubsystem intake, int dir) {
+  public IntakeCommand(Intake intake, int dir) {
     m_intake = intake;
     dir = -1;
     addRequirements(intake);
@@ -45,12 +44,12 @@ public class IntakeCommand extends CommandBase {
   @Override
   public void execute() {
     if (m_dir == 1){
-      y = OI.joy2.getRawAxis(Constants.Controller.A);
-      m_intake.rollWheels(y);
+      //y = OI.joy2.getRawAxis(Constants.Controller.A);
+      //m_intake.rollWheels(y);
   }
     else if (m_dir == -1) {
-      y = OI.joy2.getRawAxis(Constants.Controller.B);
-      m_intake.rollWheels(y);
+      //y = OI.joy2.getRawAxis(Constants.Controller.B);
+      //m_intake.rollWheels(y);
     }
     
   }
