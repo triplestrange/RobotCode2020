@@ -27,26 +27,22 @@ public class SwerveDrive extends SubsystemBase {
   private final SwerveModule m_frontLeft
       = new SwerveModule(SwerveDriveConstants.frontLeftDrive,
                          SwerveDriveConstants.frontLeftSteer,
-                         SwerveDriveConstants.frontLeftDriveEncoderReversed,
                          SwerveDriveConstants.frontLeftSteerEncoderReversed);
 
   private final SwerveModule m_rearLeft =
       new SwerveModule(SwerveDriveConstants.backLeftDrive,
                        SwerveDriveConstants.backLeftSteer,
-                       SwerveDriveConstants.backLeftDriveEncoderReversed,
                        SwerveDriveConstants.backLeftSteerEncoderReversed);
 
 
   private final SwerveModule m_frontRight =
       new SwerveModule(SwerveDriveConstants.frontRightDrive,
                        SwerveDriveConstants.frontRightSteer,
-                       SwerveDriveConstants.frontRightDriveEncoderReversed,
                        SwerveDriveConstants.frontRightSteerEncoderReversed);
 
   private final SwerveModule m_rearRight =
       new SwerveModule(SwerveDriveConstants.backRightDrive,
                        SwerveDriveConstants.backRightSteer,
-                       SwerveDriveConstants.backRightDriveEncoderReversed,
                        SwerveDriveConstants.backRightSteerEncoderReversed);
 
   // The gyro sensor
