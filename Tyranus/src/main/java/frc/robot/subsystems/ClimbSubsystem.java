@@ -14,18 +14,23 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.OI;
+
 
 public class ClimbSubsystem extends SubsystemBase {
   private final CANSparkMax mClimbL = new CANSparkMax(Constants.Climb.L_MOTOR, MotorType.kBrushless);
   private final CANSparkMax mClimbR = new CANSparkMax(Constants.Climb.R_MOTOR, MotorType.kBrushless);
   private final Solenoid climbSolenoid = new Solenoid(0);
+  private boolean climb_elevator = false;
+
+
 
   /**
    * Creates a new ClimbSubsystem.
    */
   public ClimbSubsystem() {
-    mClimbL.setIdleMode(IdleMode.kBrake);
-    mClimbR.setIdleMode(IdleMode.kBrake);
+    mClimbL.setIdleMode(IdleMode.kCoast);
+    mClimbR.setIdleMode(IdleMode.kCoast);
     climbSolenoid.set(false);
   }
 
@@ -39,6 +44,10 @@ public class ClimbSubsystem extends SubsystemBase {
     mClimbR.set(-speed);
     climbSolenoid.set(false);
   }
+  
+public void resetEncoder(int startPos) {
+    //mClimbL.setSelectedSensorPosition(startPos, 0, OI.DEFAULT_TIMEOUT);
+}
 
   public void stop() {
     mClimbL.set(0);

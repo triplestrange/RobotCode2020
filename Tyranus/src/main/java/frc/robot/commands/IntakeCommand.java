@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
 import frc.robot.OI;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -20,6 +21,8 @@ public class IntakeCommand extends CommandBase {
     /**
    * Creates a new Intake.
    */
+   
+
   public IntakeCommand(IntakeSubsystem intake) {
     m_intake = intake;
     m_dir = -1;
@@ -42,11 +45,11 @@ public class IntakeCommand extends CommandBase {
   @Override
   public void execute() {
     if (m_dir == 1){
-      y = OI.joy2.getRawAxis(Constants.Controller.LT);
+      y = OI.joy2.getRawAxis(Constants.Controller.A);
       m_intake.rollWheels(y);
   }
     else if (m_dir == -1) {
-      y = OI.joy2.getRawAxis(Constants.Controller.RT);
+      y = OI.joy2.getRawAxis(Constants.Controller.B);
       m_intake.rollWheels(y);
     }
     

@@ -33,15 +33,14 @@ public class ClimbCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_dir == 1){
-      y = OI.joy2.getRawAxis(Constants.Controller.LX);
+  
+  double y = OI.joy2.getRawAxis(Constants.Controller.LY);
+    if (Math.abs(y) > 0.15) {
       m_climb.liftUp(y);
-  }
-    else if (m_dir == -1) {
-      y = OI.joy2.getRawAxis(Constants.Controller.RX);
+    } else if (Math.abs(y) < 0.15) {
       m_climb.lowerDown(y);
     }
-  }
+}
 
   public int getDir() {
     return m_dir;
