@@ -29,26 +29,22 @@ public class SwerveDrive extends SubsystemBase {
   private final SwerveModule m_frontLeft
       = new SwerveModule(SwerveDriveConstants.frontLeftDrive,
                          SwerveDriveConstants.frontLeftSteer,
-                         SwerveDriveConstants.frontLeftDriveEncoderReversed,
                          SwerveDriveConstants.frontLeftSteerEncoderReversed);
 
   private final SwerveModule m_rearLeft =
       new SwerveModule(SwerveDriveConstants.backLeftDrive,
                        SwerveDriveConstants.backLeftSteer,
-                       SwerveDriveConstants.backLeftDriveEncoderReversed,
                        SwerveDriveConstants.backLeftSteerEncoderReversed);
 
 
   private final SwerveModule m_frontRight =
       new SwerveModule(SwerveDriveConstants.frontRightDrive,
                        SwerveDriveConstants.frontRightSteer,
-                       SwerveDriveConstants.frontRightDriveEncoderReversed,
                        SwerveDriveConstants.frontRightSteerEncoderReversed);
 
   private final SwerveModule m_rearRight =
       new SwerveModule(SwerveDriveConstants.backRightDrive,
                        SwerveDriveConstants.backRightSteer,
-                       SwerveDriveConstants.backRightDriveEncoderReversed,
                        SwerveDriveConstants.backRightSteerEncoderReversed);
 
   // The gyro sensor
@@ -154,7 +150,7 @@ public class SwerveDrive extends SubsystemBase {
    * Zeroes the heading of the robot.
    */
   public void zeroHeading() {
-    m_gyro.reset();
+    navX.reset();
   }
 
   /**
@@ -163,7 +159,7 @@ public class SwerveDrive extends SubsystemBase {
    * @return the robot's heading in degrees, from 180 to 180
    */
   public double getHeading() {
-    return Math.IEEEremainder(m_gyro.getAngle(), 360) * (SwerveDriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return Math.IEEEremainder(navX.getAngle(), 360) * (SwerveDriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 
   /**
@@ -172,6 +168,6 @@ public class SwerveDrive extends SubsystemBase {
    * @return The turn rate of the robot, in degrees per second
    */
   public double getTurnRate() {
-    return m_gyro.getRate() * (SwerveDriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return navX.getRate() * (SwerveDriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 }

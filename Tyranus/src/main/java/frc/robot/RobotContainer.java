@@ -10,6 +10,7 @@ package frc.robot;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
@@ -40,7 +41,7 @@ public class RobotContainer {
   private final SwerveDrive swerveDrive = new SwerveDrive();
 
   // The driver's controller
-  XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -55,9 +56,9 @@ public class RobotContainer {
         // A split-stick arcade command, with forward/backward controlled by the left
         // hand, and turning controlled by the right.
         new RunCommand(() -> swerveDrive.drive(
-            m_driverController.getY(GenericHID.Hand.kLeft),
-            m_driverController.getX(GenericHID.Hand.kRight),
-            m_driverController.getX(GenericHID.Hand.kLeft), false)));
+            m_driverController.getRawAxis(1),
+            m_driverController.getRawAxis(0),
+            m_driverController.getRawAxis(4), false), swerveDrive));
 
   }
 
