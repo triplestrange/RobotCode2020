@@ -10,14 +10,16 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
-public class IntakeSubsystem extends SubsystemBase {
-    private CANSparkMax mIntake = new CANSparkMax(Constants.Intake.MOTOR, MotorType.kBrushless);
+public class Intake extends SubsystemBase {
+    private CANSparkMax intakeMotor = new CANSparkMax(Constants.Intake.MOTOR, MotorType.kBrushless);
     private Solenoid intakeSolenoid = new Solenoid(0);
 
-    public IntakeSubsystem() {
+    public Intake() {
         super();
-       
-        mIntake.setIdleMode(IdleMode.kCoast);
+        intakeMotor.restoreFactoryDefaults();
+        intakeMotor.setIdleMode(IdleMode.kCoast);
+        intakeMotor.enableVoltageCompensation(11);
+        intakeMotor.setSmartCurrentLimit(20);
     }
 
     public void extend() {
@@ -29,7 +31,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void rollWheels(double speed) {
-        mIntake.set(speed);
+        intakeMotor.set(speed);
     }
 
     public void stop() {

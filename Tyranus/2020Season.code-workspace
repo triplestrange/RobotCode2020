@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"path": "/Users/djdierking/Documents/GitHub/RobotCode2020/Tyranus"
+		}
+	],
+	"settings": {
+		"workbench.colorCustomizations": {
+			"activityBar.background": "#9a5400",
+			"activityBar.activeBorder": "#004023",
+			"activityBar.foreground": "#e7e7e7",
+			"activityBar.inactiveForeground": "#e7e7e799",
+			"activityBarBadge.background": "#004023",
+			"activityBarBadge.foreground": "#e7e7e7",
+			"titleBar.activeBackground": "#673800",
+			"titleBar.inactiveBackground": "#67380099",
+			"titleBar.activeForeground": "#e7e7e7",
+			"titleBar.inactiveForeground": "#e7e7e799",
+			"statusBar.background": "#673800",
+			"statusBarItem.hoverBackground": "#9a5400",
+			"statusBar.foreground": "#e7e7e7"
+		},
+		"peacock.color": "673800"
+	}
+}
