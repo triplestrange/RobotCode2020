@@ -7,6 +7,9 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
@@ -116,6 +119,14 @@ public final class Constants {
       public static final int bus_id = 1;
       // control panel motor speed
       public static final double speed = 1.0;
+    }
+
+    public static final Map<String, String> ColorMap = new HashMap<String, String>();
+    static {
+      ColorMap.putIfAbsent("R", "blue");
+      ColorMap.putIfAbsent("G", "yellow");
+      ColorMap.putIfAbsent("B", "red");
+      ColorMap.putIfAbsent("Y", "green");
     }
 
     // control panel colors (RGB values for sensor)
