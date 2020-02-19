@@ -185,14 +185,32 @@ public class SwerveModule {
     // m_drivepidController.setReference(state.speedMetersPerSecond,
     // ControlType.kVelocity);
 
+    double desiredDrive = state.speedMetersPerSecond;
+    double desiredSteering = state.angle.getRadians();
+    double currentSteering = m_turningEncoder.getPosition();
+
+    // calculate shortest path to angle with forward drive (error -pi to pi)
+    double steeringError = Math.IEEEremainder(desiredSteering - currentSteering, 2*Math.PI);
+
+    // reverse drive if error is larger than 90 degrees
+    if (steeringError > Math.PI/2) {
+      steeringError -= Math.PI;
+      desiredDrive *= -1;
+    } else if (steeringError < -Math.PI/2) {
+      steeringError += Math.PI;
+      desiredDrive *= -1;
+    }
+
+    double steeringSetpoint = currentSteering + steeringError;
+
     //sketchy code to show people it moves
-    m_driveMotor.set(state.speedMetersPerSecond / 2);
+    m_driveMotor.set(desiredDrive);
 
     //This works nicely, except:
     //>The robot doesn't take the quickest path and then reverse the drive motor
     //>When it hits 360 degrees, it rotates all the way around to 0 (see above)
-    m_pidController.setReference(state.angle.getRadians(), ControlType.kPosition);
-    SmartDashboard.putNumber("SetPoint", state.angle.getRadians());
+    m_pidController.setReference(steeringSetpoint, ControlType.kPosition);
+    SmartDashboard.putNumber("SetPoint", steeringSetpoint);
     SmartDashboard.putNumber("ProcessVariable", m_turningEncoder.getPosition());
   }
 
