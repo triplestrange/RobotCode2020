@@ -30,7 +30,7 @@ public class SwerveModule {
   private final CANSparkMax m_turningMotor;
 
   private final CANEncoder m_driveEncoder;
-  private final CANEncoder m_turningEncoder;
+   final CANAnalog m_turningEncoder;
 
   private CANPIDController m_pidController;
 
@@ -56,7 +56,7 @@ public class SwerveModule {
     m_turningMotor.restoreFactoryDefaults();
 
     m_driveEncoder = new CANEncoder(m_driveMotor);
-    m_turningEncoder = new CANEncoder(m_turningMotor);
+    m_turningEncoder = new CANAnalog(m_turningMotor, AnalogMode.kAbsolute);
 
     // Set the distance per pulse for the drive encoder. We can simply use the
     // distance traveled for one rotation of the wheel divided by the encoder
