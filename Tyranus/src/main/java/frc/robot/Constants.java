@@ -121,12 +121,12 @@ public final class Constants {
       public static final double speed = 1.0;
     }
 
-    public static final Map<String, String> ColorMap = new HashMap<String, String>();
+    public static final Map<Character, String> ColorMap = new HashMap<Character, String>();
     static {
-      ColorMap.putIfAbsent("R", "blue");
-      ColorMap.putIfAbsent("G", "yellow");
-      ColorMap.putIfAbsent("B", "red");
-      ColorMap.putIfAbsent("Y", "green");
+      ColorMap.putIfAbsent('R', "blue");
+      ColorMap.putIfAbsent('G', "yellow");
+      ColorMap.putIfAbsent('B', "red");
+      ColorMap.putIfAbsent('Y', "green");
     }
 
     // control panel colors (RGB values for sensor)

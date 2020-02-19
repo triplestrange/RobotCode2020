@@ -37,17 +37,13 @@ public class ControlPanelPositionCommand extends CommandBase {
 	public void initialize() {
 		// get game data from the driverstation
 		String gameData = DriverStation.getInstance().getGameSpecificMessage();
-		// while we haven't determined the target color
-		while (targetColor == "") {
-			// if we have available game data
-			if(gameData.length() > 0) {
-				// set the sensor's target color
-				//   convert the game data character to a string,
-				//   then read the target color from the color hash map at that string
-				targetColor = Constants.ControlPanel.ColorMap.get(String.valueOf(gameData.charAt(0)));
-				// start spinning at the defined speed
-				_subsystem.startWheel(Constants.ControlPanel.Motor.speed);
-			}
+		// if we have available game data
+		if(gameData.length() > 0) {
+			// set the sensor's target color
+			//   read the target color from the color hash map at that color character
+			targetColor = Constants.ControlPanel.ColorMap.get(gameData.charAt(0));
+			// start spinning at the defined speed
+			_subsystem.startWheel(Constants.ControlPanel.Motor.speed);
 		}
 	}
 
