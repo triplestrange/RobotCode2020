@@ -7,6 +7,9 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
@@ -102,4 +105,50 @@ public final class Constants {
   public static final class Intake {
     public static final int MOTOR = 10;
   }
+
+  // control panel constants
+  public static final class ControlPanel {
+    // control panel motor constants
+    public static final class Motor {
+      // control panel motor bus ID
+      public static final int bus_id = 1;
+      // control panel motor speed
+      public static final double speed = 1.0;
+    }
+
+    public static final Map<Character, String> ColorMap = new HashMap<Character, String>();
+    static {
+      ColorMap.putIfAbsent('R', "blue");
+      ColorMap.putIfAbsent('G', "yellow");
+      ColorMap.putIfAbsent('B', "red");
+      ColorMap.putIfAbsent('Y', "green");
+    }
+
+    // control panel colors (RGB values for sensor)
+    public static final class Colors {
+      public static final class Blue {
+        public static final double r = 0.16;
+        public static final double g = 0.40;
+        public static final double b = 0.43;
+      }
+
+      public static final class Green {
+        public static final double r = 0.22;
+        public static final double g = 0.18;
+        public static final double b = 0.60;
+      }
+
+      public static final class Red {
+        public static final double r = 0.58;
+        public static final double g = 0.09;
+        public static final double b = 0.31;
+      }
+
+      public static final class Yellow {
+        public static final double r = 0.36;
+        public static final double g = 0.09;
+        public static final double b = 0.55;
+      }
+        }
+    }
 }
