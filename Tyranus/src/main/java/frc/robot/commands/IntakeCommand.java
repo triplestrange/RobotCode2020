@@ -44,13 +44,11 @@ public class IntakeCommand extends CommandBase {
   @Override
   public void execute() {
     if (m_dir == 1){
-      //y = OI.joy2.getRawAxis(Constants.Controller.A);
-      //m_intake.rollWheels(y);
+      
   }
     else if (m_dir == -1) {
-      //y = OI.joy2.getRawAxis(Constants.Controller.B);
-      //m_intake.rollWheels(y);
-    }
+     
+  }
     
   }
 

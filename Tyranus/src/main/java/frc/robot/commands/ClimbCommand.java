@@ -33,7 +33,7 @@ public class ClimbCommand extends CommandBase {
   @Override
   public void execute() {
   
-  double y = OI.joy2.getRawAxis(Constants.Controller.LY);
+  double y = Constants.joy2.getRawAxis(Constants.Controller.LY);
     if (Math.abs(y) > 0.15) {
       m_climb.liftUp(y);
     } else if (Math.abs(y) < 0.15) {
