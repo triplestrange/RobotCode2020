@@ -40,9 +40,9 @@ public final class Constants {
     public static final boolean backRightSteerEncoderReversed = false;
 
     public static final double kTrackWidth = 0.46355;
-    //Distance between centers of right and left wheels on robot in meters
+    //Distance between centers of right and left wheels on robot
     public static final double kWheelBase = 0.71755;
-    //Distance between front and back wheels on robot in meters
+    //Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics =
         new SwerveDriveKinematics(
           new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -74,10 +74,11 @@ public final class Constants {
         // Assumes the encoders are directly mounted on the wheel shafts
         (kWheelDiameterMeters * Math.PI) / (double) kDriveEncoderCPR;
 
-    public static final double kSteerEncoderDistancePerPulse =
+    public static final double ksteerEncoderDistancePerPulse =
         // Assumes the encoders are on a 1:1 reduction with the module shaft.
-        (2*Math.PI) / (double) kSteerEncoderCPR;
 
+        (2 * Math.PI) / (double) kSteerEncoderCPR;
+   
   }
 
   public static final class OIConstants {
@@ -151,4 +152,5 @@ public final class Constants {
       }
         }
     }
+
 }
