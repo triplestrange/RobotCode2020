@@ -7,6 +7,9 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
@@ -73,6 +76,7 @@ public final class Constants {
 
     public static final double ksteerEncoderDistancePerPulse =
         // Assumes the encoders are on a 1:1 reduction with the module shaft.
+
         (2 * Math.PI) / (double) kSteerEncoderCPR;
    
   }
@@ -102,35 +106,51 @@ public final class Constants {
   public static final class Intake {
     public static final int MOTOR = 10;
   }
-  
-  public static final class Climb {
-    public static final int L_MOTOR = 0;
-    public static final int R_MOTOR = 1;
-  }
 
-  public static class Controller {
-    public final static int A = 1;
-    public final static int B = 2;
-    public final static int X = 3;
-    public final static int Y = 4;
-    public final static int LEFT_BUMPER = 5;
-    public final static int RIGHT_BUMPER = 6;
-    public final static int LEFT_FACE = 7;
-    public final static int RIGHT_FACE = 8;
-    public final static int JOY_LEFT = 9;
-    public final static int JOY_RIGHT = 10;
+  // control panel constants
+  public static final class ControlPanel {
+    // control panel motor constants
+    public static final class Motor {
+      // control panel motor bus ID
+      public static final int bus_id = 1;
+      // control panel motor speed
+      public static final double speed = 1.0;
+    }
 
-    public final static int LX = 0;
-    public final static int LY = 1;
-    public final static int LT = 2;
-    public final static int RT = 3;
-    public final static int RX = 4;
-    public final static int RY = 5;
+    public static final Map<Character, String> ColorMap = new HashMap<Character, String>();
+    static {
+      ColorMap.putIfAbsent('R', "blue");
+      ColorMap.putIfAbsent('G', "yellow");
+      ColorMap.putIfAbsent('B', "red");
+      ColorMap.putIfAbsent('Y', "green");
+    }
 
-    public final static int UP = 0;
-    public final static int RIGHT = 90;
-    public final static int DOWN = 180;
-    public final static int LEFT = 270;
+    // control panel colors (RGB values for sensor)
+    public static final class Colors {
+      public static final class Blue {
+        public static final double r = 0.16;
+        public static final double g = 0.40;
+        public static final double b = 0.43;
+      }
 
-}
+      public static final class Green {
+        public static final double r = 0.22;
+        public static final double g = 0.18;
+        public static final double b = 0.60;
+      }
+
+      public static final class Red {
+        public static final double r = 0.58;
+        public static final double g = 0.09;
+        public static final double b = 0.31;
+      }
+
+      public static final class Yellow {
+        public static final double r = 0.36;
+        public static final double g = 0.09;
+        public static final double b = 0.55;
+      }
+        }
+    }
+
 }

@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import frc.robot.subsystems.SwerveModule;
+
 import frc.robot.Constants.SwerveDriveConstants;
 
 @SuppressWarnings("PMD.ExcessiveImports")
