@@ -57,17 +57,16 @@ public final class Constants {
     public static final double ksVolts = 1;
     public static final double kvVoltSecondsPerMeter = 0.8;
     public static final double kaVoltSecondsSquaredPerMeter = 0.15;
-
     public static final double kMaxSpeedMetersPerSecond = 3;
   }
 
   public static final class ModuleConstants {
-    public static final double kMaxModuleAngularSpeedRadiansPerSecond = 2 * Math.PI;
-    public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 2 * Math.PI;
+    public static final double kMaxModuleAngularSpeedRadiansPerSecond = 10 * Math.PI;
+    public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 10 * Math.PI;
 
-    public static final double kDriveEncoderCPR = 10.5;
-    public static final double kSteerEncoderCPR = 3.3;
-    public static final double kWheelDiameterMeters = 0.15;
+    public static final double kDriveEncoderCPR = (8*10.5);
+    public static final double kSteerEncoderCPR = (3.3);
+    public static final double kWheelDiameterMeters = 0.1;
     public static final double kDriveEncoderDistancePerPulse =
         // Assumes the encoders are directly mounted on the wheel shafts
         (kWheelDiameterMeters * Math.PI) / (double) kDriveEncoderCPR;
@@ -75,15 +74,11 @@ public final class Constants {
     public static final double ksteerEncoderDistancePerPulse =
         // Assumes the encoders are on a 1:1 reduction with the module shaft.
         (2 * Math.PI) / (double) kSteerEncoderCPR;
-
-    public static final double kPModulesteerController = 1;
-
-    public static final double kPModuleDriveController = 1;
-
+   
   }
 
   public static final class OIConstants {
-    public static final int kDriverControllerPort = 1;
+    public static final int kDriverControllerPort = 0;
 
   }
 
@@ -105,7 +100,7 @@ public final class Constants {
   }
 
   public static final class Intake {
-    public static final int MOTOR = 1;
+    public static final int MOTOR = 10;
   }
   
   public static final class Climb {

@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.SwerveDriveConstants;
@@ -77,6 +78,9 @@ public class SwerveDrive extends SubsystemBase {
         m_rearLeft.getState(),
         m_frontRight.getState(),
         m_rearRight.getState());
+        SmartDashboard.putNumber("FLEncoder", m_rearLeft.m_turningEncoder.getPosition());
+        SmartDashboard.putNumber("BLSteering", m_rearLeft.getState().angle.getDegrees());
+        // SmartDashboard.putNumber("BRSteering", m_rearRight.getState().angle.getDegrees());
   }
 
   /**
