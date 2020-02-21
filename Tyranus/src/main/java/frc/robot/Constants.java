@@ -107,6 +107,11 @@ public final class Constants {
     public static final int MOTOR = 10;
   }
 
+  public static final class Climb {
+    public static final int motorL = 1;
+    public static final int motorR = 2;
+  }
+
   // control panel constants
   public static final class ControlPanel {
     // control panel motor constants
