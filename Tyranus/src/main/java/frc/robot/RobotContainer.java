@@ -28,6 +28,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.ControlPanelSubsystem;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
 
 /*
@@ -39,6 +41,8 @@ import frc.robot.subsystems.SwerveDrive;
 public class RobotContainer {
   // The robot's subsystems
   private final SwerveDrive swerveDrive = new SwerveDrive();
+  private final Intake intake = new Intake();
+  private final ControlPanelSubsystem controlPanel = new ControlPanelSubsystem();
 
   // The driver's controller
   Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);

@@ -20,6 +20,7 @@ public class Intake extends SubsystemBase {
         intakeMotor.setIdleMode(IdleMode.kCoast);
         intakeMotor.enableVoltageCompensation(11);
         intakeMotor.setSmartCurrentLimit(20);
+        intakeMotor.burnFlash();
     }
 
     public void extend() {

@@ -7,39 +7,34 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANAnalog;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
-import com.revrobotics.CANAnalog.AnalogMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 
 import frc.robot.Constants.ModuleConstants;
 
 public class SwerveModule {
+  // motors
   private final CANSparkMax m_driveMotor;
   private final CANSparkMax m_turningMotor;
 
+  // encoders
   private final CANEncoder m_driveEncoder;
-   final CANAnalog m_turningEncoder;
+  final CANEncoder m_turningEncoder;
 
+  // steering pid
   private CANPIDController m_pidController;
-
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
-  private CANPIDController m_drivepidController;
 
+  //drive pid
+  private CANPIDController m_drivepidController;
   public double dkP, dkI, dkD, dkIz, dkFF, dkMaxOutput, dkMinOutput;
-  // private final PIDController m_drivePIDController =
-  // new PIDController(0, 0, 0);
 
   /**
    * Constructs a SwerveModule.
@@ -51,12 +46,12 @@ public class SwerveModule {
 
     m_driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
     m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
-    
+
     m_driveMotor.restoreFactoryDefaults();
     m_turningMotor.restoreFactoryDefaults();
 
     m_driveEncoder = new CANEncoder(m_driveMotor);
-    m_turningEncoder = new CANAnalog(m_turningMotor, AnalogMode.kAbsolute);
+    m_turningEncoder = new CANEncoder(m_turningMotor);
 
     // Set the distance per pulse for the drive encoder. We can simply use the
     // distance traveled for one rotation of the wheel divided by the encoder
@@ -103,7 +98,7 @@ public class SwerveModule {
     SmartDashboard.putNumber("Min Output", kMinOutput);
     SmartDashboard.putNumber("Set Rotations", 0);
 
-    //Unused SparkMax DrivePID
+    // Unused SparkMax DrivePID
     m_drivepidController = m_driveMotor.getPIDController();
     dkP = 0.5;
     dkI = 0;
@@ -171,44 +166,31 @@ public class SwerveModule {
       kMinOutput = min;
       kMaxOutput = max;
     }
-    // Calculate the drive output from the drive PID controller.
-    // final var driveOutput = m_drivePIDController.calculate(
-    // m_driveEncoder.getVelocity(), state.speedMetersPerSecond);
-    // Calculate the turning motor output from the turning PID controller.
-    // final var turnOutput = m_turningPIDController.calculate(
-    // m_turningEncoder.getPosition(), state.angle.getRadians()
-    // );
-    // Calculate the turning motor output from the turning PID controller.
-    // m_driveMotor.set(driveOutput);
-    // m_turningMotor.set(turnOutput);
-
-    // m_drivepidController.setReference(state.speedMetersPerSecond,
-    // ControlType.kVelocity);
 
     double desiredDrive = state.speedMetersPerSecond;
     double desiredSteering = state.angle.getRadians();
     double currentSteering = m_turningEncoder.getPosition();
 
     // calculate shortest path to angle with forward drive (error -pi to pi)
-    double steeringError = Math.IEEEremainder(desiredSteering - currentSteering, 2*Math.PI);
+    double steeringError = Math.IEEEremainder(desiredSteering - currentSteering, 2 * Math.PI);
 
     // reverse drive if error is larger than 90 degrees
-    if (steeringError > Math.PI/2) {
+    if (steeringError > Math.PI / 2) {
       steeringError -= Math.PI;
       desiredDrive *= -1;
-    } else if (steeringError < -Math.PI/2) {
+    } else if (steeringError < -Math.PI / 2) {
       steeringError += Math.PI;
       desiredDrive *= -1;
     }
 
     double steeringSetpoint = currentSteering + steeringError;
 
-    //sketchy code to show people it moves
+    // sketchy code to show people it moves
     m_driveMotor.set(desiredDrive);
 
-    //This works nicely, except:
-    //>The robot doesn't take the quickest path and then reverse the drive motor
-    //>When it hits 360 degrees, it rotates all the way around to 0 (see above)
+    // This works nicely, except:
+    // >The robot doesn't take the quickest path and then reverse the drive motor
+    // >When it hits 360 degrees, it rotates all the way around to 0 (see above)
     m_pidController.setReference(steeringSetpoint, ControlType.kPosition);
     SmartDashboard.putNumber("SetPoint", steeringSetpoint);
     SmartDashboard.putNumber("ProcessVariable", m_turningEncoder.getPosition());

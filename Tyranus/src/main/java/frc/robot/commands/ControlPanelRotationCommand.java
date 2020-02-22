@@ -16,7 +16,7 @@ import frc.robot.Constants;
  * Control Panel command
  */
 public class ControlPanelRotationCommand extends CommandBase {
-	private final ControlPanelSubsystem _subsystem;
+	private final ControlPanelSubsystem m_subsystem;
 
 	// total spin count
 	private final int spins = 4;
@@ -29,7 +29,7 @@ public class ControlPanelRotationCommand extends CommandBase {
 	 * @param subsystem The subsystem used by this command.
 	 */
 	public ControlPanelRotationCommand(ControlPanelSubsystem subsystem) {
-		_subsystem = subsystem;
+		m_subsystem = subsystem;
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(subsystem);
 	}
@@ -38,18 +38,18 @@ public class ControlPanelRotationCommand extends CommandBase {
 	@Override
 	public void initialize() {
 		// start spinning at the defined speed
-		_subsystem.startWheel(Constants.ControlPanel.Motor.speed);
+		m_subsystem.startWheel(Constants.ControlPanel.Motor.speed);
 		// read in the current color
-		currentColor = _subsystem.getCurrentColor();
+		currentColor = m_subsystem.getCurrentColor();
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
 		// if the current color has changed ( doesn't match our stored reading )
-		if (currentColor != _subsystem.getCurrentColor()) {
+		if (currentColor != m_subsystem.getCurrentColor()) {
 			// update our stored color
-			currentColor = _subsystem.getCurrentColor();
+			currentColor = m_subsystem.getCurrentColor();
 			// increment the sections counter
 			remainingSections = remainingSections - 1;
 		}
@@ -59,7 +59,7 @@ public class ControlPanelRotationCommand extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
 		// stop spinning when the command ends
-		_subsystem.stopWheel();
+		m_subsystem.stopWheel();
 	}
 
 	// Returns true when the command should end.

@@ -15,48 +15,54 @@ import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants.  This class should not be used for any other purpose.  All constants should be
- * declared globally (i.e. public static).  Do not put anything functional in this class.
+ * The Constants class provides a convenient place for teams to hold robot-wide
+ * numerical or boolean constants. This class should not be used for any other
+ * purpose. All constants should be declared globally (i.e. public static). Do
+ * not put anything functional in this class.
  *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
+ * <p>
+ * It is advised to statically import this class (or one of its inner classes)
+ * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
   public static final class SwerveDriveConstants {
+    // drive motor CAN IDs
     public static final int frontLeftDrive = 1;
     public static final int backLeftDrive = 3;
     public static final int frontRightDrive = 2;
     public static final int backRightDrive = 4;
 
+    // steering motor CAN IDs
     public static final int frontLeftSteer = 5;
     public static final int backLeftSteer = 7;
     public static final int frontRightSteer = 6;
     public static final int backRightSteer = 8;
 
+    // encoder's aren't reversed
     public static final boolean frontLeftSteerEncoderReversed = false;
     public static final boolean backLeftSteerEncoderReversed = false;
     public static final boolean frontRightSteerEncoderReversed = false;
     public static final boolean backRightSteerEncoderReversed = false;
 
+    // Distance between centers of right and left wheels on robot in meters
     public static final double kTrackWidth = 0.46355;
-    //Distance between centers of right and left wheels on robot in meters
-    public static final double kWheelBase = 0.71755;
-    //Distance between front and back wheels on robot in meters
-    public static final SwerveDriveKinematics kDriveKinematics =
-        new SwerveDriveKinematics(
-          new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-          new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-          new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
-          new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
+    // Distance between front and back wheels on robot in meters
+    public static final double kWheelBase = 0.71755;
+
+    // kinematics constructor with module positions as arguments
+    public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
+        new Translation2d(kWheelBase / 2, kTrackWidth / 2), new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+        new Translation2d(-kWheelBase / 2, kTrackWidth / 2), new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
+
+    // gyro is not reversed
     public static final boolean kGyroReversed = true;
 
     // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
-    // These characterization values MUST be determined either experimentally or theoretically
-    // for *your* robot's drive.
-    // The RobotPy Characterization Toolsuite provides a convenient tool for obtaining these
-    // values for your robot.
+    // These characterization values MUST be determined either experimentally or
+    // theoretically
+
+    // still need to grab these values from RobotPy
     public static final double ksVolts = 1;
     public static final double kvVoltSecondsPerMeter = 0.8;
     public static final double kaVoltSecondsSquaredPerMeter = 0.15;
@@ -67,8 +73,8 @@ public final class Constants {
     public static final double kMaxModuleAngularSpeedRadiansPerSecond = 10 * Math.PI;
     public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 10 * Math.PI;
 
-    public static final double kDriveEncoderCPR = (8*10.5);
-    public static final double kSteerEncoderCPR = (3.3);
+    public static final double kDriveEncoderCPR = (8 * 10.5);
+    public static final double kSteerEncoderCPR = ((100/30)*10.5);
     public static final double kWheelDiameterMeters = 0.1;
     public static final double kDriveEncoderDistancePerPulse =
         // Assumes the encoders are directly mounted on the wheel shafts
@@ -76,7 +82,7 @@ public final class Constants {
 
     public static final double kSteerEncoderDistancePerPulse =
         // Assumes the encoders are on a 1:1 reduction with the module shaft.
-        (2*Math.PI) / (double) kSteerEncoderCPR;
+        (2 * Math.PI) / (double) kSteerEncoderCPR;
 
   }
 
@@ -95,14 +101,19 @@ public final class Constants {
     public static final double kPYController = 1;
     public static final double kPThetaController = 1;
 
-    //Constraint for the motion profilied robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
-        new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond,
-          kMaxAngularSpeedRadiansPerSecondSquared);
+    // Constraint for the motion profilied robot angle controller
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
+        kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
   }
 
+  //turret constants
+  public static final class Turret {
+    public static final int motor = 9;
+  }
+  // intake constants
   public static final class Intake {
+    // intake motor CAN ID
     public static final int MOTOR = 10;
   }
 
@@ -110,7 +121,7 @@ public final class Constants {
   public static final class ControlPanel {
     // control panel motor constants
     public static final class Motor {
-      // control panel motor bus ID
+      // control panel motor CAN ID
       public static final int bus_id = 1;
       // control panel motor speed
       public static final double speed = 1.0;
@@ -149,6 +160,6 @@ public final class Constants {
         public static final double g = 0.09;
         public static final double b = 0.55;
       }
-        }
     }
+  }
 }
