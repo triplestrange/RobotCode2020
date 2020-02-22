@@ -12,5 +12,7 @@
     "**/.settings": true,
     "**/.factorypath": true,
     "**/*~": true
-  }
+  },
+  "wpilib.deployOffline": true,
+  "wpilib.stopSimulationOnEntry": true
 }
