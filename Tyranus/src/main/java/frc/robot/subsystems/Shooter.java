@@ -13,6 +13,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 
 public class Shooter extends SubsystemBase {
   private final CANSparkMax shooter1, shooter2;
@@ -23,14 +24,12 @@ public class Shooter extends SubsystemBase {
     shooter2 = new CANSparkMax(13, MotorType.kBrushless);
     shooter1.restoreFactoryDefaults();
     shooter1.setIdleMode(IdleMode.kCoast);
-    shooter1.enableVoltageCompensation(11);
-    shooter1.setSmartCurrentLimit(40);
+    shooter1.setSmartCurrentLimit(80);
     shooter1.burnFlash();
     shooter2.restoreFactoryDefaults();
     shooter2.setIdleMode(IdleMode.kCoast);
-    shooter2.enableVoltageCompensation(11);
-    shooter2.setSmartCurrentLimit(40);
-    shooter2.follow(shooter1, true);
+    shooter2.setSmartCurrentLimit(80);
+    // shooter2.follow(shooter1, true);
     shooter2.burnFlash();
 
     SmartDashboard.putNumber("Shooter %", speed);
@@ -41,8 +40,10 @@ public class Shooter extends SubsystemBase {
     
     double set = SmartDashboard.getNumber("Shooter %", 0);
     if ((set != speed)) {
-      shooter1.set(set);
       speed = set;
     }
+      shooter1.set(speed);
+      shooter2.set(-speed);
+    
   }
 }
