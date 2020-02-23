@@ -10,8 +10,10 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 import com.revrobotics.*;
@@ -21,35 +23,66 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 
-public class Climb extends PIDSubsystem {
+public class Climb extends SubsystemBase {
   /**
    * Creates a new Climb.
-   */
-
-
-        private final CANSparkMax mClimbL = new CANSparkMax(Constants.Climb.motorL, MotorType.kBrushless);
-        private final CANSparkMax mClimbR = new CANSparkMax(Constants.Climb.motorR, MotorType.kBrushless);
-        private final Solenoid climbSolenoid = new Solenoid(0);
+   */       
         private final boolean climb_elevator = false;
         private CANEncoder m_climbEncoder;
-        private CANPIDController m_pidController;
-        public static double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
+        private CANPIDController m_climbPIDController;
+        public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
 
+        //initialize motors
+        private final CANSparkMax mClimbL = new CANSparkMax(Constants.ClimbConstants.motorL, MotorType.kBrushless);
+        private final CANSparkMax mClimbR = new CANSparkMax(Constants.ClimbConstants.motorR, MotorType.kBrushless);
+
+        private final Solenoid climbSolenoid = new Solenoid(0);
         
-        m_climbEncoder = (Climb.kEncoderPorts[0], Climb.kEncoderPorts[1], Climb.kEncoderReversed);
-
-        private final SimpleMotorFeedforward m_shooterFeedforward = 
-              new SimpleMotorFeedforward(Climb.kSVolts, Climb.kVVoltsSecondsPerRotation);
-
+        
   public Climb() {
-    super(
-        // The PIDController used by the subsystem
-        new PIDController(Climb.kP, Climb.kI, Climb.kD));
-        getController().setTolerance(Climb.ShooterToleranceRPS);
+    super();
 
-    mClimbL.setIdleMode(IdleMode.kCoast);
-    mClimbR.setIdleMode(IdleMode.kCoast);
+    // PID coefficients
+    kP = 1;
+    kI = 0;
+    kD = 0;
+    kIz = 0;
+    kFF = 0;
+    kMaxOutput = 1;
+    kMinOutput = -1;
+        
+
+    mClimbL.restoreFactoryDefaults();
+    mClimbR.restoreFactoryDefaults();
     climbSolenoid.set(false);
+
+    m_climbPIDController = mClimbL.getPIDController();
+
+    m_climbEncoder = mClimbL.getEncoder();
+
+
+    }
+
+  public void displayPID() {
+    // display PID coefficients on SmartDashboard
+    SmartDashboard.putNumber("P Gain", kP);
+    SmartDashboard.putNumber("I Gain", kI);
+    SmartDashboard.putNumber("D Gain", kD);
+    SmartDashboard.putNumber("I Zone", kIz);
+    SmartDashboard.putNumber("Feed Forward", kFF);
+    SmartDashboard.putNumber("Max Output", kMaxOutput);
+    SmartDashboard.putNumber("Min Output", kMinOutput);
+  }
+
+
+  public void setPID() {
+  // set PID coefficients
+    m_climbPIDController.setP(kP);
+    m_climbPIDController.setI(kI);
+    m_climbPIDController.setD(kD);
+    m_climbPIDController.setIZone(kIz);
+    m_climbPIDController.setFF(kFF);
+    m_climbPIDController.setOutputRange(kMinOutput, kMaxOutput);
   }
 
   public void liftUp(final double speed) {
@@ -69,19 +102,6 @@ public class Climb extends PIDSubsystem {
     climbSolenoid.set(false);
   }
 
-  @Override
-  public void useOutput(double output, double setpoint) {
-    // Use the output here
-  }
-
-  @Override
-  public double getMeasurement() {
-    // Return the process variable measurement here
-    return m_climbEncoder.getRate();
-  }
-
-  public boolean atSetpoint() {
-    return m_controller.atSetpoint();
-  }
+  
 
 }

@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 public class Intake extends SubsystemBase {
-    private CANSparkMax intakeMotor = new CANSparkMax(Constants.Intake.MOTOR, MotorType.kBrushless);
+    private CANSparkMax intakeMotor = new CANSparkMax(Constants.IntakeConstants.MOTOR, MotorType.kBrushless);
     private Solenoid intakeSolenoid = new Solenoid(0);
 
     public Intake() {
