@@ -10,7 +10,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
-import frc.robot.subsystems.Intake;;
+import frc.robot.subsystems.Intake;
 
 public class IntakeCommand extends CommandBase {
 
@@ -21,12 +21,6 @@ public class IntakeCommand extends CommandBase {
    * Creates a new Intake.
    */
    
-
-  public IntakeCommand(Intake intake) {
-    m_intake = intake;
-    m_dir = -1;
-    addRequirements(intake);
-  }
 
   public IntakeCommand(Intake intake, int dir) {
     m_intake = intake;
@@ -43,12 +37,10 @@ public class IntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_dir == 1){
-      
-  }
-    else if (m_dir == -1) {
-     
-  }
+    int buttonA;
+    int buttonB;
+
+    buttonA.whenPressed();
     
   }
 
