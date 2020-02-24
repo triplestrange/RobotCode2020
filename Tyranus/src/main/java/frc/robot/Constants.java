@@ -41,27 +41,27 @@ public final class Constants {
 		// control panel colors (RGB values for sensor)
 		public static final class Colors {
 			public static final class Blue {
-				public static final double r = 0.16;
-				public static final double g = 0.40;
-				public static final double b = 0.43;
+				public static final double r = 0.149;
+				public static final double g = 0.417;
+				public static final double b = 0.435;
 			}
 	
 			public static final class Green {
-				public static final double r = 0.22;
-				public static final double g = 0.18;
-				public static final double b = 0.60;
+				public static final double r = 0.196;
+				public static final double g = 0.595;
+				public static final double b = 0.210;
 			}
 	
 			public static final class Red {
-				public static final double r = 0.58;
-				public static final double g = 0.09;
-				public static final double b = 0.31;
+				public static final double r = 0.544;
+				public static final double g = 0.337;
+				public static final double b = 0.119;
 			}
 	
 			public static final class Yellow {
-				public static final double r = 0.36;
-				public static final double g = 0.09;
-				public static final double b = 0.55;
+				public static final double r = 0.324;
+				public static final double g = 0.572;
+				public static final double b = 0.105;
 			}
 		}
 	}
