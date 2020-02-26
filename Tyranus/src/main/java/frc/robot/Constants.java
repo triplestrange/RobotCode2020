@@ -74,7 +74,7 @@ public final class Constants {
         // Assumes the encoders are directly mounted on the wheel shafts
         (kWheelDiameterMeters * Math.PI) / (double) kDriveEncoderCPR;
 
-    public static final double ksteerEncoderDistancePerPulse =
+    public static final double kSteerEncoderDistancePerPulse =
         // Assumes the encoders are on a 1:1 reduction with the module shaft.
 
         (2 * Math.PI) / (double) kSteerEncoderCPR;
