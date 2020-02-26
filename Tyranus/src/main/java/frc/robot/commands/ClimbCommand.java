@@ -9,18 +9,16 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.ClimbSubsystem;
+
 
 public class ClimbCommand extends CommandBase {
-  private final ClimbSubsystem m_climb;
-  private int m_dir;
-  public double y;
+  private final Climb m_climb;
+
   /**
    * Creates a new ClimbCommand.
    */
-  public ClimbCommand(ClimbSubsystem climb) {
+  public ClimbCommand(Climb climb) {
     m_climb = climb;
-     m_dir = -1;
     addRequirements(climb);
   }
 
@@ -33,21 +31,7 @@ public class ClimbCommand extends CommandBase {
   @Override
   public void execute() {
   
-  double y = Constants.joy2.getRawAxis(Constants.Controller.LY);
-    if (Math.abs(y) > 0.15) {
-      m_climb.liftUp(y);
-    } else if (Math.abs(y) < 0.15) {
-      m_climb.lowerDown(y);
-    }
 }
-
-  public int getDir() {
-    return m_dir;
-  }
-
-  public void setDir(int dir) {
-    m_dir = dir;
-  }
 
   // Called once the command ends or is interrupted.
   @Override
