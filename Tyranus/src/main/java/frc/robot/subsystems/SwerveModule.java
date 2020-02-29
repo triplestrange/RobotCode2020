@@ -46,7 +46,7 @@ public class SwerveModule {
    * @param driveMotorChannel   ID for the drive motor.
    * @param turningMotorChannel ID for the turning motor.
    */
-  public SwerveModule(int driveMotorChannel, int turningMotorChannel, boolean turningEncoderReversed) {
+  public SwerveModule(int driveMotorChannel, int turningMotorChannel, double encoderCPR, boolean turningEncoderReversed) {
 
     m_driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
     m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
@@ -70,7 +70,7 @@ public class SwerveModule {
     // This is the the angle through an entire rotation (2 * wpi::math::pi)
     // divided by the encoder resolution.
     m_turningEncoder.setPositionConversionFactor(ModuleConstants.kSteerEncoderDistancePerPulse);
-    m_absoluteEncoder.setPositionConversionFactor((2*Math.PI)/3.3);
+    m_absoluteEncoder.setPositionConversionFactor(encoderCPR);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
@@ -207,7 +207,7 @@ public class SwerveModule {
 
   public void resetEncoders() {
     m_driveEncoder.setPosition(0);
-    m_turningEncoder.setPosition(-m_absoluteEncoder.getPosition());
+    m_turningEncoder.setPosition(Math.PI-m_absoluteEncoder.getPosition());
   }
 
 }

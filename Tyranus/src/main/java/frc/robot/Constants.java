@@ -10,6 +10,8 @@ package frc.robot;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.ser.impl.FailingSerializer;
+
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
@@ -56,7 +58,7 @@ public final class Constants {
         new Translation2d(-kWheelBase / 2, kTrackWidth / 2), new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
     // gyro is not reversed
-    public static final boolean kGyroReversed = true;
+    public static final boolean kGyroReversed = false;
 
     // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
     // These characterization values MUST be determined either experimentally or
@@ -83,6 +85,11 @@ public final class Constants {
     public static final double kSteerEncoderDistancePerPulse =
         // Assumes the encoders are on a 1:1 reduction with the module shaft.
         (2 * Math.PI) / (double) kSteerEncoderCPR;
+
+    public static final double kAbsoluteFL = (2*Math.PI)/3.332;
+    public static final double kAbsoluteFR = (2*Math.PI)/3.236;
+    public static final double kAbsoluteBL = (2*Math.PI)/3.30;
+    public static final double kAbsoluteBR = (2*Math.PI)/3.312;
 
   }
 

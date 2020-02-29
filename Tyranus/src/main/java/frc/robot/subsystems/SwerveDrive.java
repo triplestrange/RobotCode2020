@@ -19,8 +19,7 @@ import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-
+import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 
 @SuppressWarnings("PMD.ExcessiveImports")
@@ -29,22 +28,26 @@ public class SwerveDrive extends SubsystemBase {
   private final SwerveModule m_frontLeft
       = new SwerveModule(SwerveDriveConstants.frontLeftDrive,
                          SwerveDriveConstants.frontLeftSteer,
+                         ModuleConstants.kAbsoluteFL,
                          SwerveDriveConstants.frontLeftSteerEncoderReversed);
 
   private final SwerveModule m_rearLeft =
       new SwerveModule(SwerveDriveConstants.backLeftDrive,
                        SwerveDriveConstants.backLeftSteer,
+                       ModuleConstants.kAbsoluteBL,
                        SwerveDriveConstants.backLeftSteerEncoderReversed);
 
 
   private final SwerveModule m_frontRight =
       new SwerveModule(SwerveDriveConstants.frontRightDrive,
                        SwerveDriveConstants.frontRightSteer,
+                       ModuleConstants.kAbsoluteFR,
                        SwerveDriveConstants.frontRightSteerEncoderReversed);
 
   private final SwerveModule m_rearRight =
       new SwerveModule(SwerveDriveConstants.backRightDrive,
                        SwerveDriveConstants.backRightSteer,
+                       ModuleConstants.kAbsoluteBR,
                        SwerveDriveConstants.backRightSteerEncoderReversed);
 
   // The gyro sensor
@@ -67,7 +70,7 @@ public class SwerveDrive extends SubsystemBase {
    */
   public Rotation2d getAngle() {
     // Negating the angle because WPILib gyros are CW positive.
-    return Rotation2d.fromDegrees(navX.getAngle() * (SwerveDriveConstants.kGyroReversed ? 1.0 : -1.0));
+    return Rotation2d.fromDegrees((navX.getAngle()+90) * (SwerveDriveConstants.kGyroReversed ? 1.0 : -1.0));
   }
 
   @Override

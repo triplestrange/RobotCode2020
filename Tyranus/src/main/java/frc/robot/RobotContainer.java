@@ -44,9 +44,9 @@ import frc.robot.subsystems.SwerveDrive;
 public class RobotContainer {
   // The robot's subsystems
   public static SwerveDrive swerveDrive = new SwerveDrive();
-  private final Intake intake = new Intake();
-  private final Conveyor zoom = new Conveyor();
-  private final Shooter shooter = new Shooter();
+  // private final Intake intake = new Intake();
+  // private final Conveyor zoom = new Conveyor();
+  // private final Shooter shooter = new Shooter();
 
   // The driver's controller
   public static Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
@@ -64,11 +64,11 @@ public class RobotContainer {
     swerveDrive.setDefaultCommand(
       
         new RunCommand(() -> swerveDrive.drive(
-            m_driverController.getRawAxis(1),
-            m_driverController.getRawAxis(0),
-            m_driverController.getRawAxis(4), false), swerveDrive));
+            -m_driverController.getRawAxis(1),
+            -m_driverController.getRawAxis(0),
+            -m_driverController.getRawAxis(4), true), swerveDrive));
     
-    zoom.setDefaultCommand(new InstantCommand(zoom::autoIndex, zoom));
+    // zoom.setDefaultCommand(new InstantCommand(zoom::autoIndex, zoom));
 
   }
 
@@ -79,7 +79,7 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_operatorController, 1).whenPressed(new InstantCommand(intake::extend, intake)).whenReleased(intake::retract, intake);
+    // new JoystickButton(m_operatorController, 1).whenPressed(new InstantCommand(intake::extend, intake)).whenReleased(intake::retract, intake);
 
   }
 
