@@ -1,42 +1,36 @@
 package frc.robot.subsystems;
 
-import frc.robot.Constants;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 public class Intake extends SubsystemBase {
-    // private CANSparkMax intakeMotor = new CANSparkMax(Constants.Intake.MOTOR, MotorType.kBrushless);
-    // private Solenoid intakeSolenoid = new Solenoid(0);
+    private CANSparkMax intakeMotor = new CANSparkMax(11, MotorType.kBrushless);
+    private DoubleSolenoid intakeSolenoid = new DoubleSolenoid(0,1);
 
     public Intake() {
         super();
-        // intakeMotor.restoreFactoryDefaults();
-        // intakeMotor.setIdleMode(IdleMode.kCoast);
-        // intakeMotor.enableVoltageCompensation(11);
-        // intakeMotor.setSmartCurrentLimit(20);
-        // intakeMotor.burnFlash();
+        intakeMotor.restoreFactoryDefaults();
+        intakeMotor.setIdleMode(IdleMode.kBrake);
+        intakeMotor.setSmartCurrentLimit(20);
+        intakeMotor.burnFlash();
     }
 
     public void extend() {
-        // intakeSolenoid.set(true);
+        intakeSolenoid.set(Value.kForward);
     }
 
     public void retract() {
-        // intakeSolenoid.set(false);
+        intakeSolenoid.set(Value.kReverse);
     }
 
-    public void rollWheels(double speed) {
-        // intakeMotor.set(speed);
-    }
-
-    public void stop() {
-        rollWheels(0);
+    public void periodic() {
     }
 
 }

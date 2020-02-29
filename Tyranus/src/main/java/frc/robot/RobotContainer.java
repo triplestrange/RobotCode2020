@@ -43,14 +43,14 @@ import frc.robot.subsystems.SwerveDrive;
  */
 public class RobotContainer {
   // The robot's subsystems
-  private final SwerveDrive swerveDrive = new SwerveDrive();
-  // private final Intake intake = new Intake();
-  private final Shooter shooter = new Shooter();
+  public static SwerveDrive swerveDrive = new SwerveDrive();
+  private final Intake intake = new Intake();
   private final Conveyor zoom = new Conveyor();
+  private final Shooter shooter = new Shooter();
 
   // The driver's controller
   public static Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
-  public static Joystick joy2 = new Joystick(1);
+  public static Joystick m_operatorController = new Joystick(1);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -62,12 +62,13 @@ public class RobotContainer {
     // Configure default commands
     // Set the default drive command to split-stick arcade drive
     swerveDrive.setDefaultCommand(
-        // A split-stick arcade command, with forward/backward controlled by the left
-        // hand, and turning controlled by the right.
+      
         new RunCommand(() -> swerveDrive.drive(
             m_driverController.getRawAxis(1),
             m_driverController.getRawAxis(0),
             m_driverController.getRawAxis(4), false), swerveDrive));
+    
+    zoom.setDefaultCommand(new InstantCommand(zoom::autoIndex, zoom));
 
   }
 
@@ -78,6 +79,8 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
+    new JoystickButton(m_operatorController, 1).whenPressed(new InstantCommand(intake::extend, intake)).whenReleased(intake::retract, intake);
+
   }
 
 

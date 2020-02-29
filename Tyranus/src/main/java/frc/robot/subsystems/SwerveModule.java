@@ -7,10 +7,12 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANAnalog;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANAnalog.AnalogMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -27,6 +29,8 @@ public class SwerveModule {
   // encoders
   private final CANEncoder m_driveEncoder;
   final CANEncoder m_turningEncoder;
+  final CANAnalog m_absoluteEncoder;
+
 
   // steering pid
   private CANPIDController m_pidController;
@@ -52,6 +56,7 @@ public class SwerveModule {
 
     m_driveEncoder = new CANEncoder(m_driveMotor);
     m_turningEncoder = new CANEncoder(m_turningMotor);
+    m_absoluteEncoder = new CANAnalog(m_turningMotor, AnalogMode.kAbsolute);
 
     // Set the distance per pulse for the drive encoder. We can simply use the
     // distance traveled for one rotation of the wheel divided by the encoder
@@ -65,7 +70,7 @@ public class SwerveModule {
     // This is the the angle through an entire rotation (2 * wpi::math::pi)
     // divided by the encoder resolution.
     m_turningEncoder.setPositionConversionFactor(ModuleConstants.kSteerEncoderDistancePerPulse);
-    m_turningEncoder.setVelocityConversionFactor(ModuleConstants.kSteerEncoderDistancePerPulse);
+    m_absoluteEncoder.setPositionConversionFactor((2*Math.PI)/3.3);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
@@ -202,5 +207,7 @@ public class SwerveModule {
 
   public void resetEncoders() {
     m_driveEncoder.setPosition(0);
+    m_turningEncoder.setPosition(-m_absoluteEncoder.getPosition());
   }
+
 }
