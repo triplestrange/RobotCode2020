@@ -70,14 +70,14 @@ public class SwerveDrive extends SubsystemBase {
    */
   public Rotation2d getAngle() {
     // Negating the angle because WPILib gyros are CW positive.
-    return Rotation2d.fromDegrees((navX.getAngle()+90) * (SwerveDriveConstants.kGyroReversed ? 1.0 : -1.0));
+    return Rotation2d.fromDegrees((navX.getAngle()+180) * (SwerveDriveConstants.kGyroReversed ? 1.0 : -1.0));
   }
 
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
     m_odometry.update(
-        new Rotation2d(getHeading()),
+        getAngle(),
         m_frontLeft.getState(),
         m_rearLeft.getState(),
         m_frontRight.getState(),
@@ -90,6 +90,10 @@ public class SwerveDrive extends SubsystemBase {
         SmartDashboard.putNumber("FRneo", m_frontRight.getState().angle.getRadians());
         SmartDashboard.putNumber("BLneo", m_rearLeft.getState().angle.getRadians());
         SmartDashboard.putNumber("BRneo", m_rearRight.getState().angle.getRadians());
+        SmartDashboard.putNumber("x", getPose().getTranslation().getX());
+        SmartDashboard.putNumber("y", getPose().getTranslation().getY());
+        SmartDashboard.putNumber("r", getPose().getRotation().getDegrees());
+        SmartDashboard.putNumber("FLdriveEncoder", m_frontLeft.m_driveEncoder.getVelocity());
   }
 
   /**
@@ -120,6 +124,7 @@ public class SwerveDrive extends SubsystemBase {
    */
   @SuppressWarnings("ParameterName")
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+
     var swerveModuleStates = SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
             xSpeed, ySpeed, rot, getAngle())

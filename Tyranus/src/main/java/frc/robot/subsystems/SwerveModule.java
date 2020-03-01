@@ -18,7 +18,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import frc.robot.Constants;
 import frc.robot.Constants.ModuleConstants;
 
 public class SwerveModule {
@@ -27,7 +27,7 @@ public class SwerveModule {
   private final CANSparkMax m_turningMotor;
 
   // encoders
-  private final CANEncoder m_driveEncoder;
+  final CANEncoder m_driveEncoder;
   final CANEncoder m_turningEncoder;
   final CANAnalog m_absoluteEncoder;
 
@@ -62,7 +62,7 @@ public class SwerveModule {
     // distance traveled for one rotation of the wheel divided by the encoder
     // resolution.
     m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveEncoderDistancePerPulse);
-    m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncoderDistancePerPulse);
+    m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncoderDistancePerPulse/60.);
 
     // Set whether drive encoder should be reversed or not
 
@@ -93,32 +93,6 @@ public class SwerveModule {
     m_pidController.setIZone(kIz);
     m_pidController.setFF(kFF);
     m_pidController.setOutputRange(kMinOutput, kMaxOutput);
-    // display PID coefficients on SmartDashboard
-    SmartDashboard.putNumber("P Gain", kP);
-    SmartDashboard.putNumber("I Gain", kI);
-    SmartDashboard.putNumber("D Gain", kD);
-    SmartDashboard.putNumber("I Zone", kIz);
-    SmartDashboard.putNumber("Feed Forward", kFF);
-    SmartDashboard.putNumber("Max Output", kMaxOutput);
-    SmartDashboard.putNumber("Min Output", kMinOutput);
-    SmartDashboard.putNumber("Set Rotations", 0);
-
-    // Unused SparkMax DrivePID
-    m_drivepidController = m_driveMotor.getPIDController();
-    dkP = 0.5;
-    dkI = 0;
-    dkD = 0;
-    dkIz = 0;
-    dkFF = 0;
-    dkMaxOutput = 1;
-    dkMinOutput = -1;
-    m_drivepidController.setP(dkP);
-    m_drivepidController.setI(dkI);
-    m_drivepidController.setD(dkD);
-    m_drivepidController.setIZone(dkIz);
-    m_drivepidController.setFF(dkFF);
-    m_drivepidController.setOutputRange(dkMinOutput, dkMaxOutput);
-
   }
 
   /**
@@ -136,43 +110,8 @@ public class SwerveModule {
    * @param state Desired state with speed and angle.
    */
   public void setDesiredState(SwerveModuleState state) {
-    double p = SmartDashboard.getNumber("P Gain", 0);
-    double i = SmartDashboard.getNumber("I Gain", 0);
-    double d = SmartDashboard.getNumber("D Gain", 0);
-    double iz = SmartDashboard.getNumber("I Zone", 0);
-    double ff = SmartDashboard.getNumber("Feed Forward", 0);
-    double max = SmartDashboard.getNumber("Max Output", 0);
-    double min = SmartDashboard.getNumber("Min Output", 0);
 
-    // if PID coefficients on SmartDashboard have changed, write new values to
-    // controller
-    if ((p != kP)) {
-      m_pidController.setP(p);
-      kP = p;
-    }
-    if ((i != kI)) {
-      m_pidController.setI(i);
-      kI = i;
-    }
-    if ((d != kD)) {
-      m_pidController.setD(d);
-      kD = d;
-    }
-    if ((iz != kIz)) {
-      m_pidController.setIZone(iz);
-      kIz = iz;
-    }
-    if ((ff != kFF)) {
-      m_pidController.setFF(ff);
-      kFF = ff;
-    }
-    if ((max != kMaxOutput) || (min != kMinOutput)) {
-      m_pidController.setOutputRange(min, max);
-      kMinOutput = min;
-      kMaxOutput = max;
-    }
-
-    double desiredDrive = state.speedMetersPerSecond;
+    double desiredDrive = state.speedMetersPerSecond/Constants.SwerveDriveConstants.kMaxSpeedMetersPerSecond;
     double desiredSteering = state.angle.getRadians();
     double currentSteering = m_turningEncoder.getPosition();
 
@@ -197,8 +136,6 @@ public class SwerveModule {
     // >The robot doesn't take the quickest path and then reverse the drive motor
     // >When it hits 360 degrees, it rotates all the way around to 0 (see above)
     m_pidController.setReference(steeringSetpoint, ControlType.kPosition);
-    SmartDashboard.putNumber("SetPoint", steeringSetpoint);
-    SmartDashboard.putNumber("ProcessVariable", m_turningEncoder.getPosition());
   }
 
   /**

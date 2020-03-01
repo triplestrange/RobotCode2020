@@ -1,3 +1,10 @@
+/*----------------------------------------------------------------------------*/
+/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
+/* Open Source Software - may be modified and shared by FRC teams. The code   */
+/* must be accompanied by the FIRST BSD license file in the root directory of */
+/* the project.                                                               */
+/*----------------------------------------------------------------------------*/
+
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
@@ -16,15 +23,21 @@ public class Conveyor extends SubsystemBase {
   public Conveyor() {
     motor.restoreFactoryDefaults();
     motor.setIdleMode(IdleMode.kBrake);
-    motor.setSmartCurrentLimit(40);
     motor.burnFlash();
 
   }
-  public void autoIndex() {
-    if (!sensor.get())
-      motor.set(-0.5);
+
+  @Override
+  public void periodic() {
+    if (RobotContainer.m_driverController.getRawButton(5))
+      motor.set(-0.55);
+    else if (RobotContainer.m_driverController.getRawButton(6))
+    motor.set(-1);
+    else if (RobotContainer.m_driverController.getRawButton(2))
+    motor.set(0.75);
+    // else if(!sensor.get())
+    //   motor.set(-0.5);
     else
       motor.set(0);
   }
-  
 }

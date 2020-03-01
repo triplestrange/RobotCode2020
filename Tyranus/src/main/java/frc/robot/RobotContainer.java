@@ -44,10 +44,11 @@ import frc.robot.subsystems.SwerveDrive;
 public class RobotContainer {
   // The robot's subsystems
   public static SwerveDrive swerveDrive = new SwerveDrive();
-  // private final Intake intake = new Intake();
-  // private final Conveyor zoom = new Conveyor();
-  // private final Shooter shooter = new Shooter();
-
+  private final Intake intake = new Intake();
+  private final Conveyor zoom = new Conveyor();
+  private final Shooter shooter = new Shooter();
+  public static ProfiledPIDController theta = new ProfiledPIDController(AutoConstants.kPThetaController, 0, 0,
+  AutoConstants.kThetaControllerConstraints);
   // The driver's controller
   public static Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
   public static Joystick m_operatorController = new Joystick(1);
@@ -64,11 +65,12 @@ public class RobotContainer {
     swerveDrive.setDefaultCommand(
       
         new RunCommand(() -> swerveDrive.drive(
-            -m_driverController.getRawAxis(1),
-            -m_driverController.getRawAxis(0),
-            -m_driverController.getRawAxis(4), true), swerveDrive));
+            -m_driverController.getRawAxis(1)*Constants.SwerveDriveConstants.kMaxSpeedMetersPerSecond,
+            -m_driverController.getRawAxis(0)*Constants.SwerveDriveConstants.kMaxSpeedMetersPerSecond,
+            -m_driverController.getRawAxis(4)*(Math.PI), true), swerveDrive));
     
     // zoom.setDefaultCommand(new InstantCommand(zoom::autoIndex, zoom));
+    // shooter.setDefaultCommand(new InstantCommand(shooter::stopShooter, shooter));
 
   }
 
@@ -80,7 +82,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // new JoystickButton(m_operatorController, 1).whenPressed(new InstantCommand(intake::extend, intake)).whenReleased(intake::retract, intake);
-
+    new JoystickButton(m_driverController, 7).whenPressed(new InstantCommand(shooter::runShooter, shooter)).whenReleased(shooter::stopShooter, shooter);
   }
 
 
@@ -100,14 +102,15 @@ public class RobotContainer {
     // An example trajectory to follow.  All units in meters.
     Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
+        new Pose2d(0, 0, new Rotation2d(-(Math.PI)/2.)),
         // Pass through these two interior waypoints, making an 's' curve path
         List.of(
-            new Translation2d(1, 1),
-            new Translation2d(2, -1)
+            new Translation2d(0, -1),
+            new Translation2d(0, -2)
+
         ),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, 0, new Rotation2d(0)),
+        new Pose2d(0, -2.5, new Rotation2d(-(Math.PI)/2.)),
         config
     );
 
@@ -119,8 +122,7 @@ public class RobotContainer {
         //Position controllers
         new PIDController(AutoConstants.kPXController, 0, 0),
         new PIDController(AutoConstants.kPYController, 0, 0),
-        new ProfiledPIDController(AutoConstants.kPThetaController, 0, 0,
-                                  AutoConstants.kThetaControllerConstraints),
+        theta,
 
         swerveDrive::setModuleStates,
 
