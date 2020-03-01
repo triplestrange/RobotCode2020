@@ -11,10 +11,10 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-
 public class Intake extends SubsystemBase {
-    private CANSparkMax intakeMotor = new CANSparkMax(11, MotorType.kBrushless);
-    // private DoubleSolenoid intakeSolenoid = new DoubleSolenoid(0,1);
+    private CANSparkMax intakeMotor = new CANSparkMax(Constants.Intake.motor, MotorType.kBrushless);
+    private DoubleSolenoid intakeSolenoid = new DoubleSolenoid(0, 1);
+    private boolean extended = false;
 
     public Intake() {
         super();
@@ -26,15 +26,23 @@ public class Intake extends SubsystemBase {
     }
 
     public void extend() {
-        // intakeSolenoid.set(Value.kForward);
+        intakeSolenoid.set(Value.kForward);
+        extended = true;
     }
 
     public void retract() {
-        // intakeSolenoid.set(Value.kReverse);
+        intakeSolenoid.set(Value.kReverse);
+        extended = false;
     }
 
-    public void periodic() {
-        intakeMotor.set(RobotContainer.m_driverController.getRawAxis(2)/2.0);
+    public void runWheels(double speedIn, double speedOut) {
+        if (extended) {
+            if (speedIn > 0.1)
+                intakeMotor.set(speedIn / 1.5);
+            else if (speedOut > 0.1)
+                intakeMotor.set(speedOut / 1.5);
+        } else
+            intakeMotor.set(0);
     }
 
 }

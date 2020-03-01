@@ -26,18 +26,24 @@ public class Conveyor extends SubsystemBase {
     motor.burnFlash();
 
   }
+  public void autoIndex() {
+    if(!sensor.get())
+      motor.set(-0.5);
+    else
+      motor.set(0);
+  }
+
+  public void manualControl(double speed) {
+    motor.set(-speed);
+  }
+  public void feedShooter(double speed, boolean atSpeed) {
+    if (atSpeed)
+      motor.set(-speed);
+    else
+      motor.set(0);
+  }
 
   @Override
   public void periodic() {
-    if (RobotContainer.m_driverController.getRawButton(5))
-      motor.set(-0.55);
-    else if (RobotContainer.m_driverController.getRawButton(6))
-    motor.set(-1);
-    else if (RobotContainer.m_driverController.getRawButton(2))
-    motor.set(0.75);
-    // else if(!sensor.get())
-    //   motor.set(-0.5);
-    else
-      motor.set(0);
   }
 }

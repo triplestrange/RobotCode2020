@@ -121,7 +121,12 @@ public final class Constants {
   // intake constants
   public static final class Intake {
     // intake motor CAN ID
-    public static final int MOTOR = 11;
+    public static final int motor = 11;
+  }
+
+  public static final class Shooter {
+    public static final int motor1 = 12;
+    public static final int motor2 = 13;
   }
 
   // control panel constants

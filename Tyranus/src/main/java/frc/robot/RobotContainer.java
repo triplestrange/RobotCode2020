@@ -49,6 +49,7 @@ public class RobotContainer {
   private final Shooter shooter = new Shooter();
   public static ProfiledPIDController theta = new ProfiledPIDController(AutoConstants.kPThetaController, 0, 0,
   AutoConstants.kThetaControllerConstraints);
+
   // The driver's controller
   public static Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
   public static Joystick m_operatorController = new Joystick(1);
@@ -69,9 +70,8 @@ public class RobotContainer {
             -m_driverController.getRawAxis(0)*Constants.SwerveDriveConstants.kMaxSpeedMetersPerSecond,
             -m_driverController.getRawAxis(4)*(Math.PI), true), swerveDrive));
     
-    // zoom.setDefaultCommand(new InstantCommand(zoom::autoIndex, zoom));
-    // shooter.setDefaultCommand(new InstantCommand(shooter::stopShooter, shooter));
-
+    zoom.setDefaultCommand(new InstantCommand(zoom::autoIndex, zoom));
+    intake.setDefaultCommand(new RunCommand(() -> intake.runWheels(m_driverController.getRawAxis(5), m_driverController.getRawAxis(6))));
   }
 
   /**
@@ -83,6 +83,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // new JoystickButton(m_operatorController, 1).whenPressed(new InstantCommand(intake::extend, intake)).whenReleased(intake::retract, intake);
     new JoystickButton(m_driverController, 7).whenPressed(new InstantCommand(shooter::runShooter, shooter)).whenReleased(shooter::stopShooter, shooter);
+    new JoystickButton(m_driverController, 7).whenPressed(new RunCommand(() -> zoom.feedShooter(1, shooter.atSpeed()), zoom));
   }
 
 
