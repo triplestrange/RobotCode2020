@@ -8,22 +8,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.Turret;
 
 public class TurretCommand extends CommandBase {
   /**
    * Creates a new TurretCommand.
    */
-
-  private final Turret m_turret;
-
-  public TurretCommand(Turret turret) {
-
+  public TurretCommand() {
+    Turret m_turret = new Turret();
+    addRequirements(m_turret);
     // Use addRequirements() here to declare subsystem dependencies.
-    m_turret = turret;
-    addRequirements(turret);
   }
-
 
   // Called when the command is initially scheduled.
   @Override
@@ -33,10 +28,6 @@ public class TurretCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-  }
-
-  public void resetLimitSwitch() {
-    //turretEncoder.set(0);
   }
 
   // Called once the command ends or is interrupted.

@@ -4,15 +4,13 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
-
-import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
@@ -21,37 +19,27 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 
-public class Turret extends PIDSubsystem {
-
+public class Turret extends SubsystemBase {
   //transfer to robot container
   private static final int deviceID = 1;
-
   private final CANSparkMax turretMotor;
   private final CANPIDController m_turretPIDController;
   private CANEncoder turretEncoder;
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, rotations;
   private CANDigitalInput m_forwardLimit;
   private CANDigitalInput m_reverseLimit;
-
   public String kEnable;
   public String kDisable;
-
-
-
-   /**
-   * Creates a new Turret.
-   */
+   
   public Turret() {
-    super(
-        // The PIDController used by the subsystem
-        new PIDController(0, 0, 0));
-
-        turretMotor = new CANSparkMax(deviceID, MotorType.kBrushless);
-        
-        turretMotor.restoreFactoryDefaults();
-
-        m_turretPIDController = turretMotor.getPIDController();
-        turretEncoder = turretMotor.getEncoder();
+    super();
+      m_forwardLimit = turretMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
+      turretMotor = new CANSparkMax(deviceID, MotorType.kBrushless);
+      turretMotor.restoreFactoryDefaults();
+      m_turretPIDController = turretMotor.getPIDController();
+      turretEncoder = turretMotor.getEncoder();
+      disableLimitSwitch();
+      SmartDashboard.putBoolean("Limit Enabled", m_forwardLimit.isLimitSwitchEnabled());
   }
 
   public void PIDCoefficients() {
@@ -77,6 +65,26 @@ public class Turret extends PIDSubsystem {
   }
   
   public void displayPIDCoefficients() {
+    // read PID coefficients from SmartDashboard
+    double p = SmartDashboard.getNumber("P Gain", 0);
+    double i = SmartDashboard.getNumber("I Gain", 0);
+    double d = SmartDashboard.getNumber("D Gain", 0);
+    double iz = SmartDashboard.getNumber("I Zone", 0);
+    double ff = SmartDashboard.getNumber("Feed Forward", 0);
+    double max = SmartDashboard.getNumber("Max Output", 0);
+    double min = SmartDashboard.getNumber("Min Output", 0);
+    double rotations = SmartDashboard.getNumber("Set Rotations", 0);
+
+    // if PID coefficients on SmartDashboard have changed, write new values to controller
+    if((p != kP)) { m_turretPIDController.setP(p); kP = p; }
+    if((i != kI)) { m_turretPIDController.setI(i); kI = i; }
+    if((d != kD)) { m_turretPIDController.setD(d); kD = d; }
+    if((iz != kIz)) { m_turretPIDController.setIZone(iz); kIz = iz; }
+    if((ff != kFF)) { m_turretPIDController.setFF(ff); kFF = ff; }
+    if((max != kMaxOutput) || (min != kMinOutput)) { 
+      m_turretPIDController.setOutputRange(min, max); 
+      kMinOutput = min; kMaxOutput = max; 
+
     // display PID coefficients on SmartDashboard
     SmartDashboard.putNumber("P Gain", kP);
     SmartDashboard.putNumber("I Gain", kI);
@@ -86,50 +94,42 @@ public class Turret extends PIDSubsystem {
     SmartDashboard.putNumber("Max Output", kMaxOutput);
     SmartDashboard.putNumber("Min Output", kMinOutput);
     SmartDashboard.putNumber("Set Rotations", 0);
+    }    
   }
-
-
-  /**
-     * A CANDigitalInput object is constructed using the getForwardLimitSwitch() or
-     * getReverseLimitSwitch() method on an existing CANSparkMax object, depending
-     * on which direction you would like to limit
-     * 
-     * Limit switches can be configured to one of two polarities:
-     *  com.revrobotics.CANDigitalInput.LimitSwitchPolarity.kNormallyOpen
-     *  com.revrobotics.CANDigitalInput.LimitSwitchPolarity.kNormallyClosed
-     */
-  public void limitSwitch() {
+  
+  public void resetLimitSwitch() {
     //sets polarities
-
-    
     m_forwardLimit = turretMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
-    m_reverseLimit = turretMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
   }
 
-  public void enableLimitSwitch() {
-    //enables limit switch
-
+  public boolean enableLimitSwitch() {
     m_forwardLimit.enableLimitSwitch(true);
-    m_reverseLimit.enableLimitSwitch(true);
-
-    SmartDashboard.putBoolean("Forward Limit Enabled", m_forwardLimit.isLimitSwitchEnabled());
-    SmartDashboard.putBoolean("Reverse Limit Enabled", m_reverseLimit.isLimitSwitchEnabled());
+    return true;
   }
 
-  @Override
-  public void useOutput(final double output, final double setpoint) {
-    m_turretPIDController.setReference(rotations, ControlType.kPosition);
+  public boolean disableLimitSwitch() {
+    m_forwardLimit.enableLimitSwitch(false);
+    return false;
   }
 
+  public boolean getLimitSwitchStatus() {
+    if (enableLimitSwitch()) {
+      return true;
+    }
+    else 
+      return false;
+  }
+  private Joystick m_stick;
+  public void moveTurret() {
+    turretMotor.set(m_stick.getY());
+    turretMotor.set(speed);
+
+
+  }
+  
   public void setPosition() {
   SmartDashboard.putNumber("SetPoint", rotations);
   SmartDashboard.putNumber("ProcessVariable", turretEncoder.getPosition());
-  }
-
-  @Override
-  public double getMeasurement() {
-    // Return the process variable measurement here
-    return 0;
   }
 
   public void stop() {
