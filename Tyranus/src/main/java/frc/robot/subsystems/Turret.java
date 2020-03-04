@@ -7,21 +7,17 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj2.command.PIDSubsystem;
-
-import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 
-public class Turret extends PIDSubsystem {
+public class Turret extends SubsystemBase {
 
   //transfer to robot container
   private static final int deviceID = 1;
@@ -42,10 +38,6 @@ public class Turret extends PIDSubsystem {
    * Creates a new Turret.
    */
   public Turret() {
-    super(
-        // The PIDController used by the subsystem
-        new PIDController(0, 0, 0));
-
         turretMotor = new CANSparkMax(deviceID, MotorType.kBrushless);
         
         turretMotor.restoreFactoryDefaults();
@@ -101,7 +93,6 @@ public class Turret extends PIDSubsystem {
   public void limitSwitch() {
     //sets polarities
 
-    
     m_forwardLimit = turretMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
     m_reverseLimit = turretMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
   }
@@ -116,20 +107,15 @@ public class Turret extends PIDSubsystem {
     SmartDashboard.putBoolean("Reverse Limit Enabled", m_reverseLimit.isLimitSwitchEnabled());
   }
 
-  @Override
-  public void useOutput(final double output, final double setpoint) {
-    m_turretPIDController.setReference(rotations, ControlType.kPosition);
+  public void resetEncoder() {
+    if (m_forwardLimit.get()) {
+        turretEncoder.setPosition(0);
+    }
   }
 
   public void setPosition() {
   SmartDashboard.putNumber("SetPoint", rotations);
   SmartDashboard.putNumber("ProcessVariable", turretEncoder.getPosition());
-  }
-
-  @Override
-  public double getMeasurement() {
-    // Return the process variable measurement here
-    return 0;
   }
 
   public void stop() {
