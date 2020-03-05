@@ -36,12 +36,12 @@ public class Intake extends SubsystemBase {
     }
 
     public void runWheels(double speedIn, double speedOut) {
-        if (extended) {
+        // if (extended) {
             if (speedIn > 0.1)
-                intakeMotor.set(speedIn / 1.5);
+                intakeMotor.set(speedIn / 3);
             else if (speedOut > 0.1)
-                intakeMotor.set(speedOut / 1.5);
-        } else
+                intakeMotor.set(-speedOut / 3);
+         else
             intakeMotor.set(0);
     }
 

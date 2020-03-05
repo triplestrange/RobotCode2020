@@ -35,10 +35,6 @@ public class TurretCommand extends CommandBase {
   public void execute() {
   }
 
-  public void resetLimitSwitch() {
-    //turretEncoder.set(0);
-  }
-
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {

@@ -22,7 +22,7 @@ public class Shooter extends SubsystemBase {
   private final CANSparkMax shooter1, shooter2;
   private CANPIDController m_pidController;
   private CANEncoder m_encoder;
-  public double kP, kFF, kMaxOutput, kMinOutput, maxRPM, setPoint, speed;
+  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, setPoint, speed;
 
   public Shooter() {
     shooter1 = new CANSparkMax(12, MotorType.kBrushless);
@@ -38,16 +38,21 @@ public class Shooter extends SubsystemBase {
     shooter2.follow(shooter1, true);
     shooter2.burnFlash();
 
-
     m_encoder = shooter1.getEncoder();
     m_pidController = shooter1.getPIDController();
     kP = 30;
+    kI = 0;
+    kD = 0; 
+    // kDf = 0.5;
+    kIz = 0; 
     kFF = 1.0/5700.0; 
     kMaxOutput = 1; 
     kMinOutput = 0.8;
     maxRPM = 5700.0;
-    speed = 0;
     m_pidController.setP(kP);
+    m_pidController.setI(kI);
+    m_pidController.setD(kD);
+    m_pidController.setIZone(kIz);
     m_pidController.setFF(kFF);
     m_pidController.setOutputRange(kMinOutput, kMaxOutput);
     SmartDashboard.putNumber("Shooter P", kP);
@@ -55,15 +60,12 @@ public class Shooter extends SubsystemBase {
   }
 
   public void runShooter() {
-    // read PID coefficients from SmartDashboard
-    double p = SmartDashboard.getNumber("Shooter P", 0);
-    setPoint = SmartDashboard.getNumber("Shooter Velocity", 4750);
+    setPoint = SmartDashboard.getNumber("Shooter Velocity", 5500);
 
-    // if PID coefficients on SmartDashboard have changed, write new values to controller
-    if((p != kP)) { m_pidController.setP(p); kP = p; }
     m_pidController.setReference(setPoint, ControlType.kVelocity);
     
     SmartDashboard.putNumber("SetPoint", setPoint);
+    SmartDashboard.putNumber("OutputCurrent", shooter1.get());
     
   }
   public void stopShooter() {
@@ -73,6 +75,6 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("ProcessVariable", m_encoder.getVelocity());
   }
   public boolean atSpeed() {
-    return Math.abs(setPoint - m_encoder.getVelocity())<30;
+    return Math.abs(setPoint - m_encoder.getVelocity())<300;
   }
 }
