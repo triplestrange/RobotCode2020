@@ -48,9 +48,9 @@ public final class Constants {
 
     // Distance between centers of right and left wheels on robot in meters
     public static final double kTrackWidth = 0.46355;
-
-    // Distance between front and back wheels on robot in meters
+    //Distance between centers of right and left wheels on robot
     public static final double kWheelBase = 0.71755;
+    //Distance between front and back wheels on robot
 
     // kinematics constructor with module positions as arguments
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
@@ -90,7 +90,7 @@ public final class Constants {
     public static final double kAbsoluteFR = (2*Math.PI)/3.236;
     public static final double kAbsoluteBL = (2*Math.PI)/3.30;
     public static final double kAbsoluteBR = (2*Math.PI)/3.312;
-
+   
   }
 
   public static final class OIConstants {
@@ -127,6 +127,12 @@ public final class Constants {
   public static final class Shooter {
     public static final int motor1 = 12;
     public static final int motor2 = 13;
+  }
+
+  public static final class ClimbConstants {
+    public static final int motorL = 1;
+    public static final int motorR = 2;
+
   }
 
   // control panel constants
