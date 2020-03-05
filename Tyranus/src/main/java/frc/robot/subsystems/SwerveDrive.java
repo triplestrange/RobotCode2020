@@ -19,9 +19,7 @@ import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import frc.robot.subsystems.SwerveModule;
-
+import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 
 @SuppressWarnings("PMD.ExcessiveImports")
@@ -30,22 +28,26 @@ public class SwerveDrive extends SubsystemBase {
   private final SwerveModule m_frontLeft
       = new SwerveModule(SwerveDriveConstants.frontLeftDrive,
                          SwerveDriveConstants.frontLeftSteer,
+                         ModuleConstants.kAbsoluteFL,
                          SwerveDriveConstants.frontLeftSteerEncoderReversed);
 
   private final SwerveModule m_rearLeft =
       new SwerveModule(SwerveDriveConstants.backLeftDrive,
                        SwerveDriveConstants.backLeftSteer,
+                       ModuleConstants.kAbsoluteBL,
                        SwerveDriveConstants.backLeftSteerEncoderReversed);
 
 
   private final SwerveModule m_frontRight =
       new SwerveModule(SwerveDriveConstants.frontRightDrive,
                        SwerveDriveConstants.frontRightSteer,
+                       ModuleConstants.kAbsoluteFR,
                        SwerveDriveConstants.frontRightSteerEncoderReversed);
 
   private final SwerveModule m_rearRight =
       new SwerveModule(SwerveDriveConstants.backRightDrive,
                        SwerveDriveConstants.backRightSteer,
+                       ModuleConstants.kAbsoluteBR,
                        SwerveDriveConstants.backRightSteerEncoderReversed);
 
   // The gyro sensor
@@ -68,21 +70,30 @@ public class SwerveDrive extends SubsystemBase {
    */
   public Rotation2d getAngle() {
     // Negating the angle because WPILib gyros are CW positive.
-    return Rotation2d.fromDegrees(navX.getAngle() * (SwerveDriveConstants.kGyroReversed ? 1.0 : -1.0));
+    return Rotation2d.fromDegrees((navX.getAngle()+180) * (SwerveDriveConstants.kGyroReversed ? 1.0 : -1.0));
   }
 
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
     m_odometry.update(
-        new Rotation2d(getHeading()),
+        getAngle(),
         m_frontLeft.getState(),
         m_rearLeft.getState(),
         m_frontRight.getState(),
         m_rearRight.getState());
-        SmartDashboard.putNumber("FLEncoder", m_rearLeft.m_turningEncoder.getPosition());
-        SmartDashboard.putNumber("BLSteering", m_rearLeft.getState().angle.getDegrees());
-        // SmartDashboard.putNumber("BRSteering", m_rearRight.getState().angle.getDegrees());
+        SmartDashboard.putNumber("FLSteering", m_frontLeft.m_absoluteEncoder.getPosition());
+        SmartDashboard.putNumber("FRSteering", m_frontRight.m_absoluteEncoder.getPosition());
+        SmartDashboard.putNumber("BLSteering", m_rearLeft.m_absoluteEncoder.getPosition());
+        SmartDashboard.putNumber("BRSteering", m_rearRight.m_absoluteEncoder.getPosition());
+        SmartDashboard.putNumber("FLneo", m_frontLeft.getState().angle.getRadians());
+        SmartDashboard.putNumber("FRneo", m_frontRight.getState().angle.getRadians());
+        SmartDashboard.putNumber("BLneo", m_rearLeft.getState().angle.getRadians());
+        SmartDashboard.putNumber("BRneo", m_rearRight.getState().angle.getRadians());
+        SmartDashboard.putNumber("x", getPose().getTranslation().getX());
+        SmartDashboard.putNumber("y", getPose().getTranslation().getY());
+        SmartDashboard.putNumber("r", getPose().getRotation().getDegrees());
+        SmartDashboard.putNumber("FLdriveEncoder", m_frontLeft.m_driveEncoder.getVelocity());
   }
 
   /**
@@ -113,6 +124,7 @@ public class SwerveDrive extends SubsystemBase {
    */
   @SuppressWarnings("ParameterName")
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+
     var swerveModuleStates = SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
             xSpeed, ySpeed, rot, getAngle())
