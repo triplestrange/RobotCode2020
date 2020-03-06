@@ -7,14 +7,10 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 import com.revrobotics.*;
 import com.revrobotics.CANPIDController;
@@ -22,109 +18,95 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-
 public class Climb extends SubsystemBase {
   /**
    * Creates a new Climb.
-   */       
-        private final boolean climb_elevator = false;
-        private CANEncoder m_climbEncoder;
-        private CANPIDController m_climbPIDController;
-        public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, rotations;
+   */
+  // PID constants for both climb arms
+  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, rotations;
 
-        //initialize motors
-        private final CANSparkMax mClimb = new CANSparkMax(Constants.ClimbConstants.motorL, MotorType.kBrushless);
-        
-        private final Solenoid climbSolenoid = new Solenoid(0);
-        
-        
+  // initialize motors
+  private final CANSparkMax climbL, climbR;
+
+  // Motor encoders
+  private CANEncoder climbLEncoder, climbREncoder;
+
+  // motor PIDControllers
+  private CANPIDController climbLController, climbRController;
+
   public Climb() {
-    super();
+    // settings for left climb motor
+    climbL = new CANSparkMax(Constants.ClimbConstants.motorL, MotorType.kBrushless);
+    climbL.restoreFactoryDefaults();
+    climbL.setIdleMode(IdleMode.kBrake);
+    climbL.setSmartCurrentLimit(60);
+    climbL.burnFlash();
+    climbLEncoder = climbL.getEncoder();
+    climbLController = climbL.getPIDController();
 
-    // PID coefficients
-    kP = 1;
+    // settings for right climb motor
+    climbR = new CANSparkMax(Constants.ClimbConstants.motorR, MotorType.kBrushless);
+    climbR.restoreFactoryDefaults();
+    climbR.setIdleMode(IdleMode.kBrake);
+    climbR.setSmartCurrentLimit(60);
+    climbR.burnFlash();
+    climbREncoder = climbR.getEncoder();
+    climbRController = climbR.getPIDController();
+
+    // // PID coefficients
+    kP = 0.25;
     kI = 0;
     kD = 0;
     kIz = 0;
-    kFF = 0;
+    kFF = 1.0 / 5676.0;
     kMaxOutput = 1;
     kMinOutput = -1;
-        
 
-    mClimb.restoreFactoryDefaults();
-    climbSolenoid.set(false);
+    // left climb motor PID
+    climbLController.setP(kP);
+    climbLController.setI(kI);
+    climbLController.setD(kD);
+    climbLController.setIZone(kIz);
+    climbLController.setFF(kFF);
+    climbLController.setOutputRange(kMinOutput, kMaxOutput);
 
-    m_climbPIDController = mClimb.getPIDController();
-
-    m_climbEncoder = mClimb.getEncoder();
-
-
-    }
-
-  public void displayPID() {
-    // display PID coefficients on SmartDashboard
-    SmartDashboard.putNumber("P Gain", kP);
-    SmartDashboard.putNumber("I Gain", kI);
-    SmartDashboard.putNumber("D Gain", kD);
-    SmartDashboard.putNumber("I Zone", kIz);
-    SmartDashboard.putNumber("Feed Forward", kFF);
-    SmartDashboard.putNumber("Max Output", kMaxOutput);
-    SmartDashboard.putNumber("Min Output", kMinOutput);
-  }
+    // right climb motor PID
+    climbRController.setP(kP);
+    climbRController.setI(kI);
+    climbRController.setD(kD);
+    climbRController.setIZone(kIz);
+    climbRController.setFF(kFF);
+    climbRController.setOutputRange(kMinOutput, kMaxOutput);
 
 
-  public void setPID() {
-    double p = SmartDashboard.getNumber("P Gain", 0);
-    double i = SmartDashboard.getNumber("I Gain", 0);
-    double d = SmartDashboard.getNumber("D Gain", 0);
-    double iz = SmartDashboard.getNumber("I Zone", 0);
-    double ff = SmartDashboard.getNumber("Feed Forward", 0);
-    double max = SmartDashboard.getNumber("Max Output", 0);
-    double min = SmartDashboard.getNumber("Min Output", 0);
-    rotations = SmartDashboard.getNumber("Set Rotations", 0);
-
-    if((p != kP)) { m_climbPIDController.setP(p); kP = p; }
-    if((i != kI)) { m_climbPIDController.setI(i); kI = i; }
-    if((d != kD)) { m_climbPIDController.setD(d); kD = d; }
-    if((iz != kIz)) { m_climbPIDController.setIZone(iz); kIz = iz; }
-    if((ff != kFF)) { m_climbPIDController.setFF(ff); kFF = ff; }
-    if((max != kMaxOutput) || (min != kMinOutput)) { 
-      m_climbPIDController.setOutputRange(min, max); 
-      kMinOutput = min; kMaxOutput = max; 
-    }
-
-  // set PID coefficients
-    m_climbPIDController.setP(kP);
-    m_climbPIDController.setI(kI);
-    m_climbPIDController.setD(kD);
-    m_climbPIDController.setIZone(kIz);
-    m_climbPIDController.setFF(kFF);
-    m_climbPIDController.setOutputRange(kMinOutput, kMaxOutput);
+    SmartDashboard.putNumber("Climb Position", rotations);
   }
 
   public void setPosition() {
-    m_climbPIDController.setReference(rotations, ControlType.kPosition);
-    
-    SmartDashboard.putNumber("SetPoint", rotations);
-    SmartDashboard.putNumber("ProcessVariable", m_climbEncoder.getPosition());
-  }
+  climbLController.setReference(-SmartDashboard.getNumber("Climb Position", 0), ControlType.kPosition);
+  SmartDashboard.putNumber("LClimbEncoder", climbLEncoder.getPosition());
 
-
-    
-  public void liftToPosition(int rotations) {
-    m_climbPIDController.setReference(rotations, ControlType.kPosition);
-    climbSolenoid.set(true);
+  climbRController.setReference(SmartDashboard.getNumber("Climb Position", 0), ControlType.kPosition);
+  SmartDashboard.putNumber("RClimbEncoder", climbREncoder.getPosition());
   }
-
-  public void lowerToPosition(int rotations) {
-    m_climbPIDController.setReference(rotations, ControlType.kPosition);
-    climbSolenoid.set(false);
-  }
-  
 
   public void stop() {
-    mClimb.set(0);
-    climbSolenoid.set(false);
+    climbL.set(0);
+    climbR.set(0);
+  }
+
+  public void periodic() {
+    if (Math.abs(RobotContainer.m_operatorController.getRawAxis(1)) > 0.2) {
+      climbL.set(-RobotContainer.m_operatorController.getRawAxis(1));
+    } else {
+      climbL.set(0);
+    }
+    if (Math.abs(RobotContainer.m_operatorController.getRawAxis(5)) > 0.2) {
+      climbR.set(RobotContainer.m_operatorController.getRawAxis(5));
+    } else {
+      climbR.set(0);
+    }
+
   }
 
 }

@@ -17,6 +17,7 @@ import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
@@ -26,9 +27,9 @@ public class Turret extends SubsystemBase {
   // transfer to robot container
   private static final int motor = 10;
   private final CANSparkMax turretMotor;
-  private final CANPIDController m_turretPIDController;
+  // private final CANPIDController m_turretPIDController;
   private CANEncoder turretEncoder;
-  public double kP, kFF, kMaxOutput, kMinOutput, rotations;
+  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, setPoint, rotations;
   private CANDigitalInput m_reverseLimit;
   private DigitalInput limitSwitch;
 
@@ -41,42 +42,62 @@ public class Turret extends SubsystemBase {
     turretMotor.setSmartCurrentLimit(30);
     turretMotor.setIdleMode(IdleMode.kBrake);
     turretMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
-    turretMotor.setSoftLimit(SoftLimitDirection.kForward, 100);
+    turretMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
+
+    turretMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    turretMotor.setSoftLimit(SoftLimitDirection.kReverse, -130);
+
+    turretMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
+
     turretMotor.burnFlash();
 
     turretEncoder = turretMotor.getEncoder();
+    turretEncoder.setPosition(0);
 
-    m_turretPIDController = turretMotor.getPIDController();
+    // m_turretPIDController = turretMotor.getPIDController();
 
     // PID coefficients
-    kP = 0.1;
-    kFF = 0;
-    kMaxOutput = 1;
-    kMinOutput = -1;
+    // kP = 0.1;
+    // kFF = 1./11000.;
+    // kI = 0;
+    // kD = 0; 
+    // kIz = 0; 
+    // kMaxOutput = 1;
+    // kMinOutput = -1;
 
-    // set PID coefficients
-    m_turretPIDController.setP(kP);
-    m_turretPIDController.setFF(kFF);
-    m_turretPIDController.setOutputRange(kMinOutput, kMaxOutput);
+    // // set PID coefficients
+    // m_turretPIDController.setP(kP);
+    // m_turretPIDController.setFF(kFF);
+    // m_turretPIDController.setOutputRange(kMinOutput, kMaxOutput);
 
-    m_reverseLimit = turretMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
-    m_reverseLimit.enableLimitSwitch(true);
+    // m_reverseLimit = turretMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
+    // m_reverseLimit.enableLimitSwitch(true);
   }
 
   public void periodic() {
     // display PID coefficients on SmartDashboard
-    SmartDashboard.putNumber("P Gain", kP);
-    SmartDashboard.putNumber("Feed Forward", kFF);
-    SmartDashboard.putNumber("Set Rotations", 0);
+    // SmartDashboard.putNumber("P Gain", kP);
+    // SmartDashboard.putNumber("Feed Forward", kFF);
+    // SmartDashboard.putNumber("Set Rotations", 0);
+    SmartDashboard.putNumber("turretEncoder", turretEncoder.getPosition());
   }
 
-  public void setPosition(double setpoint) {
-    m_turretPIDController.setReference(setpoint, ControlType.kPosition);
-    SmartDashboard.putNumber("SetPoint", setpoint);
-    SmartDashboard.putNumber("ProcessVariable", turretEncoder.getPosition());
-  }
+  // public void setPosition(double setpoint) {
+  //   m_turretPIDController.setReference(setpoint, ControlType.kPosition);
+  //   SmartDashboard.putNumber("SetPoint", setpoint);
+  //   SmartDashboard.putNumber("ProcessVariable", turretEncoder.getPosition());
+  // }
 
   public void stop() {
     turretMotor.set(0);
   }
+
+  public void spin(final double left, final double right) {
+        if (left > 0.1)
+          turretMotor.set(-left / 2);
+        else if (right > 0.1)
+          turretMotor.set(right);
+     else
+     turretMotor.set(0);
+    }
 }

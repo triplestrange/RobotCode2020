@@ -17,7 +17,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Constants.ModuleConstants;
 
@@ -37,8 +36,8 @@ public class SwerveModule {
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
 
   //drive pid
-  private CANPIDController m_drivepidController;
-  public double dkP, dkI, dkD, dkIz, dkFF, dkMaxOutput, dkMinOutput;
+  // private CANPIDController m_drivepidController;
+  // public double dkP, dkI, dkD, dkIz, dkFF, dkMaxOutput, dkMinOutput;
 
   /**
    * Constructs a SwerveModule.
@@ -144,7 +143,8 @@ public class SwerveModule {
 
   public void resetEncoders() {
     m_driveEncoder.setPosition(0);
-    m_turningEncoder.setPosition(Math.PI-m_absoluteEncoder.getPosition());
+    // m_turningEncoder.setPosition(Math.PI-m_absoluteEncoder.getPosition());
+    m_turningEncoder.setPosition(0);
   }
 
 }

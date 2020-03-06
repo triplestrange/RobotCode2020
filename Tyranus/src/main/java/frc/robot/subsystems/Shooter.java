@@ -29,12 +29,12 @@ public class Shooter extends SubsystemBase {
     shooter2 = new CANSparkMax(13, MotorType.kBrushless);
     shooter1.restoreFactoryDefaults();
     shooter1.setIdleMode(IdleMode.kCoast);
-    shooter1.setSmartCurrentLimit(80);
+    shooter1.setSmartCurrentLimit(60);
     shooter1.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
     shooter1.burnFlash();
     shooter2.restoreFactoryDefaults();
     shooter2.setIdleMode(IdleMode.kCoast);
-    shooter2.setSmartCurrentLimit(80);
+    shooter2.setSmartCurrentLimit(60);
     shooter2.follow(shooter1, true);
     shooter2.burnFlash();
 
@@ -45,10 +45,11 @@ public class Shooter extends SubsystemBase {
     kD = 0; 
     // kDf = 0.5;
     kIz = 0; 
-    kFF = 1.0/5700.0; 
+    kFF = 1.0/5676.0; 
     kMaxOutput = 1; 
     kMinOutput = 0.8;
-    maxRPM = 5700.0;
+    maxRPM = 5676.0;
+    speed = 4550.0;
     m_pidController.setP(kP);
     m_pidController.setI(kI);
     m_pidController.setD(kD);
@@ -60,7 +61,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void runShooter() {
-    setPoint = SmartDashboard.getNumber("Shooter Velocity", 5500);
+    setPoint = SmartDashboard.getNumber("Shooter Velocity", 4550);
 
     m_pidController.setReference(setPoint, ControlType.kVelocity);
     
@@ -75,6 +76,6 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("ProcessVariable", m_encoder.getVelocity());
   }
   public boolean atSpeed() {
-    return Math.abs(setPoint - m_encoder.getVelocity())<300;
+    return Math.abs(setPoint - m_encoder.getVelocity())<250;
   }
 }

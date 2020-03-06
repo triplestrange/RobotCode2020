@@ -1,11 +1,17 @@
 
 package frc.robot;
 
+// import com.ctre.phoenix.sensors.CANCoder;
+// import com.ctre.phoenix.sensors.CANCoderConfiguration;
+
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
 // import frc.robot.vision.GripPipeline;
 
 // import org.opencv.core.Rect;
@@ -20,42 +26,25 @@ public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  // private static final int IMG_WIDTH = 320;
-  // private static final int IMG_HEIGHT = 240;
+  // private CANCoder hoodEncoder = new CANCoder(0);
 
-  // private VisionThread visionThread;
-  // private double centerX = 0.0;
-
-  // private final Object imgLock = new Object();
+  // CANCoderConfiguration _canCoderConfiguration = new CANCoderConfiguration();
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
-    // UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-    // camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
+    CameraServer.getInstance().startAutomaticCapture().setResolution(320, 160);
 
-    // visionThread = new VisionThread(camera, new GripPipeline(), pipeline -> {
-    //     if (!pipeline.convexHullsOutput().isEmpty()) {
-    //         Rect r = Imgproc.boundingRect(pipeline.convexHullsOutput().get(0));
-    //         synchronized (imgLock) {
-    //             centerX = r.x + (r.width / 2);
-    //         }
-    //     }
-    // });
-    // visionThread.start();
+    // hoodEncoder.configAllSettings(_canCoderConfiguration);
+  
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    // double centerX;
-    // synchronized (imgLock) {
-    //     centerX = this.centerX;
-    // }
-    // double center = centerX - (IMG_WIDTH / 2);
-    // double yaw = ((center - ((IMG_WIDTH / 2) - 0.5)) * (68.5/IMG_WIDTH));
-    // double pitch = ((center - ((IMG_HEIGHT / 2) - 0.5)) * (68.5/IMG_HEIGHT));
-  }
+    // SmartDashboard.putNumber("hoodEncoder", hoodEncoder.getPosition());
+    // SmartDashboard.putNumber("hoodVoltage", hoodEncoder.getBusVoltage());
+}
 
   @Override
   public void disabledInit() {
@@ -75,7 +64,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    RobotContainer.swerveDrive.resetEncoders();
+    // RobotContainer.swerveDrive.resetEncoders();
   }
 
   @Override
@@ -87,7 +76,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    RobotContainer.swerveDrive.resetEncoders();
+    // RobotContainer.swerveDrive.resetEncoders();
   }
 
   @Override
