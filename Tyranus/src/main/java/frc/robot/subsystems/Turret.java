@@ -27,7 +27,7 @@ public class Turret extends SubsystemBase {
   // transfer to robot container
   private static final int motor = 10;
   private final CANSparkMax turretMotor;
-  // private final CANPIDController m_turretPIDController;
+  private final CANPIDController m_turretPIDController;
   private CANEncoder turretEncoder;
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, setPoint, rotations;
   private CANDigitalInput m_reverseLimit;
@@ -54,21 +54,24 @@ public class Turret extends SubsystemBase {
     turretEncoder = turretMotor.getEncoder();
     turretEncoder.setPosition(0);
 
-    // m_turretPIDController = turretMotor.getPIDController();
+    m_turretPIDController = turretMotor.getPIDController();
 
     // PID coefficients
-    // kP = 0.1;
-    // kFF = 1./11000.;
-    // kI = 0;
-    // kD = 0; 
-    // kIz = 0; 
-    // kMaxOutput = 1;
-    // kMinOutput = -1;
+    kP = 0.1;
+    kFF = 1./11000.;
+    kI = 0;
+    kD = 0; 
+    kIz = 0; 
+    kMaxOutput = 1;
+    kMinOutput = -1;
 
     // // set PID coefficients
-    // m_turretPIDController.setP(kP);
-    // m_turretPIDController.setFF(kFF);
-    // m_turretPIDController.setOutputRange(kMinOutput, kMaxOutput);
+    m_turretPIDController.setP(kP);
+    m_turretPIDController.setI(kI);
+    m_turretPIDController.setD(kD);
+    m_turretPIDController.setIZone(kIz);
+    m_turretPIDController.setFF(kFF);
+    m_turretPIDController.setOutputRange(kMinOutput, kMaxOutput);
 
     // m_reverseLimit = turretMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
     // m_reverseLimit.enableLimitSwitch(true);
@@ -82,11 +85,11 @@ public class Turret extends SubsystemBase {
     SmartDashboard.putNumber("turretEncoder", turretEncoder.getPosition());
   }
 
-  // public void setPosition(double setpoint) {
-  //   m_turretPIDController.setReference(setpoint, ControlType.kPosition);
-  //   SmartDashboard.putNumber("SetPoint", setpoint);
-  //   SmartDashboard.putNumber("ProcessVariable", turretEncoder.getPosition());
-  // }
+  public void setPosition(double setpoint) {
+    m_turretPIDController.setReference(setpoint, ControlType.kPosition);
+    SmartDashboard.putNumber("SetPoint", setpoint);
+    SmartDashboard.putNumber("ProcessVariable", turretEncoder.getPosition());
+  }
 
   public void stop() {
     turretMotor.set(0);

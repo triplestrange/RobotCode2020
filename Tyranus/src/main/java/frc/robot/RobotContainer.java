@@ -131,19 +131,19 @@ public class RobotContainer {
                         .setKinematics(SwerveDriveConstants.kDriveKinematics);
 
         // An example trajectory to follow. All units in meters.
-        // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-        // // Start at the origin facing the +X direction
-        // new Pose2d(0, 0, new Rotation2d(-(Math.PI) / 2.)),
-        // // Pass through these two interior waypoints, making an 's' curve path
-        // List.of(new Translation2d(0, 1)
-
-        // ),
-        // // End 3 meters straight ahead of where we started, facing forward
-        // new Pose2d(0, 2.5, new Rotation2d(-(Math.PI) / 2.)), config);
-
         Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(0, 0, new Rotation2d(-(Math.PI) / 2.)),
+        // Pass through these two interior waypoints, making an 's' curve path
+        List.of(new Translation2d(0, 1)
+
+        ),
+        // End 3 meters straight ahead of where we started, facing forward
+        new Pose2d(0, 2, new Rotation2d(-(Math.PI) / 2.)), config);
+
+        Trajectory exampleTrajectory2 = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
-                new Pose2d(0, 1, new Rotation2d(-(Math.PI) / 2.)),
+                new Pose2d(0, 2, new Rotation2d(-(Math.PI) / 2.)),
                 // Pass through these two interior waypoints, making an 's' curve path
                 List.of(new Translation2d(0, -1)
 
@@ -182,7 +182,8 @@ public class RobotContainer {
         // );
 
         // Run path following command, then stop at the end.
-        return new InstantCommand(shooter::runShooter, shooter)
+        return new RunCommand(() -> spinny.setPosition(-42), spinny)
+                .andThen(new InstantCommand(shooter::runShooter, shooter))
                 .andThen(new RunCommand(() -> zoom.feedShooter(0.75, shooter.atSpeed()), zoom)).withTimeout(4)
                 .andThen(new InstantCommand(shooter::stopShooter, shooter))
                 .andThen(new RunCommand(zoom::autoIndex, zoom)).withTimeout(5).andThen(swerveControllerCommand1)

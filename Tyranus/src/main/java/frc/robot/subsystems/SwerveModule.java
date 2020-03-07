@@ -128,12 +128,8 @@ public class SwerveModule {
 
     double steeringSetpoint = currentSteering + steeringError;
 
-    // sketchy code to show people it moves
     m_driveMotor.set(desiredDrive);
 
-    // This works nicely, except:
-    // >The robot doesn't take the quickest path and then reverse the drive motor
-    // >When it hits 360 degrees, it rotates all the way around to 0 (see above)
     m_pidController.setReference(steeringSetpoint, ControlType.kPosition);
   }
 
