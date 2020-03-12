@@ -16,6 +16,7 @@ import com.revrobotics.*;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class Climb extends SubsystemBase {
@@ -40,8 +41,15 @@ public class Climb extends SubsystemBase {
     climbL.restoreFactoryDefaults();
     climbL.setIdleMode(IdleMode.kBrake);
     climbL.setSmartCurrentLimit(60);
+    // climbL.enableSoftLimit(SoftLimitDirection.kForward, true);
+    // climbL.setSoftLimit(SoftLimitDirection.kForward, 310);
+
+    // climbL.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    // climbL.setSoftLimit(SoftLimitDirection.kReverse, 0);
+
     climbL.burnFlash();
     climbLEncoder = climbL.getEncoder();
+    climbLEncoder.setPosition(0);
     climbLController = climbL.getPIDController();
 
     // settings for right climb motor
@@ -49,8 +57,15 @@ public class Climb extends SubsystemBase {
     climbR.restoreFactoryDefaults();
     climbR.setIdleMode(IdleMode.kBrake);
     climbR.setSmartCurrentLimit(60);
+    // climbR.enableSoftLimit(SoftLimitDirection.kForward, true);
+    // climbR.setSoftLimit(SoftLimitDirection.kForward, 0);
+
+    // climbR.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    // climbR.setSoftLimit(SoftLimitDirection.kReverse, -310);
+
     climbR.burnFlash();
     climbREncoder = climbR.getEncoder();
+    climbREncoder.setPosition(0);
     climbRController = climbR.getPIDController();
 
     // // PID coefficients
@@ -96,17 +111,19 @@ public class Climb extends SubsystemBase {
   }
 
   public void periodic() {
-    if (Math.abs(RobotContainer.m_operatorController.getRawAxis(1)) > 0.2) {
-      climbL.set(-RobotContainer.m_operatorController.getRawAxis(1));
+    if (Math.abs(RobotContainer.m_operatorController.getRawAxis(5)) > 0.2) {
+      climbL.set(-RobotContainer.m_operatorController.getRawAxis(5));
     } else {
       climbL.set(0);
     }
-    if (Math.abs(RobotContainer.m_operatorController.getRawAxis(5)) > 0.2) {
-      climbR.set(RobotContainer.m_operatorController.getRawAxis(5));
+    if (Math.abs(RobotContainer.m_operatorController.getRawAxis(1)) > 0.2) {
+      climbR.set(RobotContainer.m_operatorController.getRawAxis(1));
     } else {
       climbR.set(0);
     }
-
+    
+  SmartDashboard.putNumber("LClimbEncoder", climbLEncoder.getPosition());
+  SmartDashboard.putNumber("RClimbEncoder", climbREncoder.getPosition());
   }
 
 }

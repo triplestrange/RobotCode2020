@@ -12,6 +12,7 @@ import frc.robot.RobotContainer;
 public class Conveyor extends SubsystemBase {
   private CANSparkMax motor = new CANSparkMax(9, MotorType.kBrushed);
   private DigitalInput sensor = new DigitalInput(9);
+  private boolean send = false;
     
   public Conveyor() {
     motor.restoreFactoryDefaults();
@@ -35,7 +36,18 @@ public class Conveyor extends SubsystemBase {
     else
       motor.set(0);
   }
+  public void full53ND(double speed, boolean atSpeed) {
+    if (atSpeed)
+      send = true;
+    if (send)
+      motor.set(-1);
+    else
+      motor.set(0);
+  }
 
+  public void setSend() {
+    send = false;
+  }
   @Override
   public void periodic() {
   }

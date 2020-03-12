@@ -69,6 +69,19 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("OutputCurrent", shooter1.get());
     
   }
+
+  public void full53ND() {
+    // setPoint = SmartDashboard.getNumber("Shooter HighSpeed", 5000);
+
+    m_pidController.setReference(maxRPM, ControlType.kVelocity);
+    
+    SmartDashboard.putNumber("SetPoint", setPoint);
+    SmartDashboard.putNumber("OutputCurrent", shooter1.get());
+    
+  }
+  public void setShooter() {
+    shooter1.set(-0.5);
+  }
   public void stopShooter() {
     shooter1.set(0);
   }
@@ -76,6 +89,6 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("ProcessVariable", m_encoder.getVelocity());
   }
   public boolean atSpeed() {
-    return Math.abs(setPoint - m_encoder.getVelocity())<250;
+    return (Math.abs(setPoint - m_encoder.getVelocity()))/(setPoint) < 0.05;
   }
 }

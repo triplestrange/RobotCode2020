@@ -97,9 +97,9 @@ public class Turret extends SubsystemBase {
 
   public void spin(final double left, final double right) {
         if (left > 0.1)
-          turretMotor.set(-left / 2);
+          turretMotor.set(-left / 12.);
         else if (right > 0.1)
-          turretMotor.set(right);
+          turretMotor.set(right/12.);
      else
      turretMotor.set(0);
     }
