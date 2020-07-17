@@ -48,6 +48,7 @@ public class RobotContainer {
     public final static Shooter shooter = new Shooter();
     private final Climb climb = new Climb();
     private final Turret spinny = new Turret();
+//     private final Vision vision = new Vision();
 
     // The driver's controller
     public static Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
@@ -97,6 +98,8 @@ public class RobotContainer {
         spinny.setDefaultCommand(new RunCommand(
                 () -> spinny.spin(m_driverController.getRawAxis(2), m_driverController.getRawAxis(3)),
                 spinny));
+
+        // vision.setDefaultCommand(new RunCommand(vision::runVision, vision));
     }
 
     /**
@@ -111,11 +114,15 @@ public class RobotContainer {
                 .whenReleased(intake::retract, intake);
         new JoystickButton(m_operatorController, 6).whileHeld(new InstantCommand(shooter::runShooter, shooter))
                 .whenReleased(shooter::stopShooter, shooter);
+        new JoystickButton(m_operatorController, 9).whileHeld(new RunCommand(() -> shooter.runHood(0), shooter));
+        new JoystickButton(m_operatorController, 10).whileHeld(new RunCommand(() -> shooter.runHood(1), shooter));
         new JoystickButton(m_operatorController, 6)
                 .whenPressed(new RunCommand(() -> zoom.feedShooter(0.8, shooter.atSpeed()), zoom))
                 .whenReleased(new RunCommand(zoom::autoIndex, zoom));
         new JoystickButton(m_operatorController, 5).whenPressed(new RunCommand(() -> zoom.manualControl(-1), zoom))
                 .whenReleased(new RunCommand(zoom::autoIndex, zoom));
+        // new JoystickButton(m_operatorController, 8).whileHeld(new InstantCommand(vision::runVision, vision))
+        //         .whenReleased(vision::filler, vision); // not sure what to put as method here
     }
 
     /**
@@ -125,7 +132,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // Create config for trajectory
-        TrajectoryConfig config = new TrajectoryConfig(AutoConstants.kMaxSpeedMetersPerSecond,
+        TrajectoryConfig config = new TrajectoryConfig(.75,
                 AutoConstants.kMaxAccelerationMetersPerSecondSquared)
                         // Add kinematics to ensure max speed is actually obeyed
                         .setKinematics(SwerveDriveConstants.kDriveKinematics);
@@ -133,26 +140,16 @@ public class RobotContainer {
         // An example trajectory to follow. All units in meters.
         Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(-(Math.PI) / 2.)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(new Translation2d(0, 1)
-
-        ),
+        new Pose2d(0, 0, new Rotation2d((Math.PI) / 2)),
+        List.of(),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(0, 2, new Rotation2d(-(Math.PI) / 2.)), config);
+        new Pose2d(-4, 2.3, new Rotation2d((Math.PI) / 2)), config);
 
-        Trajectory exampleTrajectory2 = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                new Pose2d(0, 2, new Rotation2d(-(Math.PI) / 2.)),
-                // Pass through these two interior waypoints, making an 's' curve path
-                List.of(new Translation2d(0, -1)
 
-                ),
-                // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(0, -2, new Rotation2d(-(Math.PI) / 2.)), config);
+
 
         SwerveControllerCommand swerveControllerCommand1 = new SwerveControllerCommand(exampleTrajectory,
-                (-(Math.PI) / 2.), swerveDrive::getPose, // Functional interface to feed supplier
+                (1.875), swerveDrive::getPose, // Functional interface to feed supplier
                 SwerveDriveConstants.kDriveKinematics,
 
                 // Position controllers
@@ -165,28 +162,13 @@ public class RobotContainer {
 
         );
 
-        // SwerveControllerCommand swerveControllerCommand2 = new
-        // SwerveControllerCommand(exampleTrajectory2,
-        // (-(Math.PI) / 2.), swerveDrive::getPose, // Functional interface to feed
-        // supplier
-        // SwerveDriveConstants.kDriveKinematics,
+        Command shootCommand = new InstantCommand(() -> shooter.setHood(0.5), shooter)
+                                .andThen(shooter::runShooter, shooter)
+                                .andThen(new RunCommand(() -> zoom.feedShooter(0.75, shooter.atSpeed()), zoom))
+                                .withTimeout(15).andThen(new InstantCommand(shooter::stopShooter, shooter));
 
-        // // Position controllers
-        // new PIDController(AutoConstants.kPXController, 0, 0),
-        // new PIDController(AutoConstants.kPYController, 0, 0), theta,
+        return swerveControllerCommand1.andThen(() -> swerveDrive.drive(0, 0, 0, false)).andThen(shootCommand);
 
-        // swerveDrive::setModuleStates,
-
-        // swerveDrive
-
-        // );
-
-        // Run path following command, then stop at the end.
-        return new RunCommand(() -> spinny.setPosition(-42), spinny)
-                .andThen(new InstantCommand(shooter::runShooter, shooter))
-                .andThen(new RunCommand(() -> zoom.feedShooter(0.75, shooter.atSpeed()), zoom)).withTimeout(4)
-                .andThen(new InstantCommand(shooter::stopShooter, shooter))
-                .andThen(new RunCommand(zoom::autoIndex, zoom)).withTimeout(5).andThen(swerveControllerCommand1)
-                /* .andThen(swerveControllerCommand2) */.andThen(() -> swerveDrive.drive(0, 0, 0, false));
     }
+
 }

@@ -36,8 +36,7 @@ public class Robot extends TimedRobot {
     CameraServer.getInstance().startAutomaticCapture().setResolution(320, 160);
 
     // hoodEncoder.configAllSettings(_canCoderConfiguration);
-  
-  }
+      }
 
   @Override
   public void robotPeriodic() {

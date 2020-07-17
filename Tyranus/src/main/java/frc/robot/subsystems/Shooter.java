@@ -15,11 +15,13 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
   private final CANSparkMax shooter1, shooter2;
+  private final Servo hoodServo;
   private CANPIDController m_pidController;
   private CANEncoder m_encoder;
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, setPoint, speed;
@@ -27,6 +29,7 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
     shooter1 = new CANSparkMax(12, MotorType.kBrushless);
     shooter2 = new CANSparkMax(13, MotorType.kBrushless);
+    hoodServo = new Servo(0);
     shooter1.restoreFactoryDefaults();
     shooter1.setIdleMode(IdleMode.kCoast);
     shooter1.setSmartCurrentLimit(60);
@@ -58,6 +61,7 @@ public class Shooter extends SubsystemBase {
     m_pidController.setOutputRange(kMinOutput, kMaxOutput);
     SmartDashboard.putNumber("Shooter P", kP);
     SmartDashboard.putNumber("Shooter Velocity", speed);
+
   }
 
   public void runShooter() {
@@ -69,13 +73,42 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("OutputCurrent", shooter1.get());
     
   }
+
   public void stopShooter() {
     shooter1.set(0);
   }
+
+  
+
+
+  public void runHood(double pos) {
+    double currentPos = hoodServo.get();
+    if (pos == 0) {
+      hoodServo.set(currentPos - 0.01);
+    } else if (pos == 1) {
+      hoodServo.set(currentPos + 0.01);
+    }
+  }
+
+  public void setHood(double pos) {
+    hoodServo.set(pos);
+  }
+
+
   public void periodic() {
     SmartDashboard.putNumber("ProcessVariable", m_encoder.getVelocity());
+    SmartDashboard.putNumber("SHOOTER HOODS POS", hoodServo.get());
+    SmartDashboard.putNumber("SHOOTER HOODS ANGLE", hoodServo.getAngle());
   }
   public boolean atSpeed() {
-    return Math.abs(setPoint - m_encoder.getVelocity())<250;
+    return Math.abs(setPoint - m_encoder.getVelocity())<300; // play with the number (go up to 1,000)
   }
 }
+
+
+
+
+
+
+
+

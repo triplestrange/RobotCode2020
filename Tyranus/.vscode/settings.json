@@ -12,5 +12,12 @@
     "**/.settings": true,
     "**/.factorypath": true,
     "**/*~": true
-  }
+  },
+  "extensions.ignoreRecommendations": true
+  "extensions.ignoreRecommendations": true,
+  "files.autoSave": "off"
+  "extensions.ignoreRecommendations": true,
+  "files.autoSave": "off"
+  "extensions.ignoreRecommendations": true,
+  "files.autoSave": "off"
 }
