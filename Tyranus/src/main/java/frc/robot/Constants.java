@@ -178,6 +178,14 @@ public final class Constants {
         public static final double g = 0.09;
         public static final double b = 0.55;
       }
+
     }
+  }
+
+  public static final class Vision {
+    public static final double kCameraHeight = 0.51; // meter
+    public static final double kCameraPitch = 0.436; // radians
+    public static final double kTargetHeight = 2.44; // meters
+    
   }
 }

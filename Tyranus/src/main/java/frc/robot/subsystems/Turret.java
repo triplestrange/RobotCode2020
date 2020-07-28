@@ -8,7 +8,10 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANDigitalInput;
@@ -32,11 +35,15 @@ public class Turret extends SubsystemBase {
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, setPoint, rotations;
   private CANDigitalInput m_reverseLimit;
   private DigitalInput limitSwitch;
+  public Vision vision;
+  private PIDController visionController = new PIDController(Constants.Vision.turretKP, Constants.Vision.turretKI, Constants.Vision.turretKD);
 
   /**
    * Creates a new Turret.
    */
-  public Turret() {
+  public Turret(Vision vision) {
+    this.vision = vision;
+
     turretMotor = new CANSparkMax(motor, MotorType.kBrushless);
     turretMotor.restoreFactoryDefaults();
     turretMotor.setSmartCurrentLimit(30);
@@ -102,5 +109,15 @@ public class Turret extends SubsystemBase {
           turretMotor.set(right);
      else
      turretMotor.set(0);
-    }
+  }
+
+  public void visionTurret() {
+    double targetYaw = vision.getTargetYaw();
+    
+    visionController.setSetpoint(0);
+    double speed = visionController.calculate(targetYaw);
+    turretMotor.set(speed);
+    
+
+  }
 }

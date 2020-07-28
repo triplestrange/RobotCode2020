@@ -47,8 +47,8 @@ public class RobotContainer {
     private final Conveyor zoom = new Conveyor();
     public final static Shooter shooter = new Shooter();
     private final Climb climb = new Climb();
-    private final Turret spinny = new Turret();
-//     private final Vision vision = new Vision();
+    public final Vision vision = new Vision();
+    private final Turret spinny = new Turret(vision);
 
     // The driver's controller
     public static Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
