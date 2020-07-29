@@ -72,24 +72,14 @@ public class Vision extends SubsystemBase {
         double targetYaw = target.getYaw();
         
         return targetYaw;
+    }   
+
+    public boolean hasTargets() {
+        PhotonPipelineResult result = camera.getLatestResult();
+
+        boolean hasTargets = result.hasTargets();
+
+        return hasTargets;
     }
-
-   
-
-} 
-
-   
-
-} 
-
-   
-
-} 
-
-   
-
-} 
-
-   
 
 } 

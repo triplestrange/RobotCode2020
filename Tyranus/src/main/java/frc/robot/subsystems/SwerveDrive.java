@@ -172,7 +172,7 @@ public class SwerveDrive extends SubsystemBase {
   /**
    * Returns the heading of the robot.
    *
-   * @return the robot's heading in degrees, from 180 to 180
+   * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
     return Math.IEEEremainder(navX.getAngle(), 360) * (SwerveDriveConstants.kGyroReversed ? -1.0 : 1.0);

@@ -12,7 +12,9 @@ import java.util.List;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -48,11 +50,14 @@ public class RobotContainer {
     public final static Shooter shooter = new Shooter();
     private final Climb climb = new Climb();
     public final Vision vision = new Vision();
-    private final Turret spinny = new Turret(vision);
+    private final Turret spinny = new Turret(vision, swerveDrive);
 
     // The driver's controller
     public static Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
     public static Joystick m_operatorController = new Joystick(1);
+
+//     public static final GenericHID.RumbleType kLeftRumble = 1;
+
 
     public static ProfiledPIDController theta = new ProfiledPIDController(AutoConstants.kPThetaController, 0, 0,
             AutoConstants.kThetaControllerConstraints);
@@ -96,8 +101,18 @@ public class RobotContainer {
                 intake));
 
         spinny.setDefaultCommand(new RunCommand(
-                () -> spinny.spin(m_driverController.getRawAxis(2), m_driverController.getRawAxis(3)),
+                () -> {
+                        spinny.spin(m_driverController.getRawAxis(2), m_driverController.getRawAxis(3));                        
+                        spinny.maintainDirection(m_driverController);
+                        
+                        // rumble controller if vision sees targets also how do u make it not rumble constnatly
+                        if (vision.hasTargets() == true) {
+                                m_driverController.setRumble(RumbleType.kLeftRumble, 0.3);
+                        }
+                },
                 spinny));
+
+        
 
         // vision.setDefaultCommand(new RunCommand(vision::runVision, vision));
     }
@@ -121,8 +136,9 @@ public class RobotContainer {
                 .whenReleased(new RunCommand(zoom::autoIndex, zoom));
         new JoystickButton(m_operatorController, 5).whenPressed(new RunCommand(() -> zoom.manualControl(-1), zoom))
                 .whenReleased(new RunCommand(zoom::autoIndex, zoom));
-        // new JoystickButton(m_operatorController, 8).whileHeld(new InstantCommand(vision::runVision, vision))
-        //         .whenReleased(vision::filler, vision); // not sure what to put as method here
+        
+        // should be start button idk what number is so fix it
+        new JoystickButton(m_operatorController, 12).whenHeld(new InstantCommand(spinny::visionTurret, spinny));
     }
 
     /**

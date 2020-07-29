@@ -187,5 +187,8 @@ public final class Constants {
     public static final double kCameraPitch = 0.436; // radians
     public static final double kTargetHeight = 2.44; // meters
     
+    public static final double turretKP = 0;
+    public static final double turretKI = 0;
+    public static final double turretKD = 0;
   }
 }
