@@ -39,7 +39,6 @@ public class Turret extends SubsystemBase {
   public Vision vision;
   public SwerveDrive swerve;
   private PIDController visionController = new PIDController(Constants.Vision.turretKP, Constants.Vision.turretKI, Constants.Vision.turretKD);
-
   /**
    * Creates a new Turret.
    */
@@ -106,12 +105,23 @@ public class Turret extends SubsystemBase {
   }
 
   public void spin(final double left, final double right) {
-        if (left > 0.1)
-          turretMotor.set(-left / 2);
-        else if (right > 0.1)
-          turretMotor.set(right);
+    double robotHeading = swerve.getHeading();
+
+    double targetPosition = 0;
+    
+    if (robotHeading < 0 && robotHeading > -180 ) {
+      targetPosition = -robotHeading;
+    } else if (robotHeading > 0 && robotHeading < 180) {
+      targetPosition = 360 - robotHeading;
+
+    } 
+
+    if (left > 0.1)
+      turretMotor.set(-left / 2);
+    else if (right > 0.1)
+      turretMotor.set(right);
      else
-     turretMotor.set(0);
+      m_turretPIDController.setReference(targetPosition, ControlType.kPosition);
   }
 
   public void visionTurret() {
@@ -122,31 +132,5 @@ public class Turret extends SubsystemBase {
     turretMotor.set(speed);
   }
 
-  // uses swerve gyro to make sure turret stays pointed at target
-  // does name sound weird & should this be in periodic
-  public void maintainDirection(Joystick joystick) {
-    // gets the heading of the robot from -180 to 180 (should be 0 - intake facing right)
-    // double heading = swerve.getHeading();
-
-    // double turretTarget = heading > 0 ? heading - 90 : 0;
-
-    visionController.setSetpoint(0);
-  
-    // turret should always be facing the target, which is -90 deg
-    double speed = visionController.calculate(90);
-    
-    // makes sure driver isn't trying to override turret
-    // third button should be start button
-    if (joystick.getRawAxis(2) == 0 && joystick.getRawAxis(3) == 0 && joystick.getRawButton(12) == false) {
-      turretMotor.set(speed);
-    }
-
-    // not sure if this is the right place to put it, but this is the default command
-    // makes joystick rumble if vision target is acquired
-    if (vision.hasTargets() == true) {
-
-    }
-    
-  }
 
 }

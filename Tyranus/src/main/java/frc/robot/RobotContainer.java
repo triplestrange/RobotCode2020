@@ -46,11 +46,11 @@ public class RobotContainer {
     // The robot's subsystems
     public static SwerveDrive swerveDrive = new SwerveDrive();
     private final Intake intake = new Intake();
-    private final Conveyor zoom = new Conveyor();
+    private final Conveyor conveyor = new Conveyor();
     public final static Shooter shooter = new Shooter();
     private final Climb climb = new Climb();
     public final Vision vision = new Vision();
-    private final Turret spinny = new Turret(vision, swerveDrive);
+    private final Turret turret = new Turret(vision, swerveDrive);
 
     // The driver's controller
     public static Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
@@ -95,22 +95,23 @@ public class RobotContainer {
                         -m_driverController.getRawAxis(0) * Constants.SwerveDriveConstants.kMaxSpeedMetersPerSecond,
                         -m_driverController.getRawAxis(4) * (Math.PI), true), swerveDrive));
 
-        zoom.setDefaultCommand(new RunCommand(zoom::autoIndex, zoom));
+        conveyor.setDefaultCommand(new RunCommand(conveyor::autoIndex, conveyor));
         intake.setDefaultCommand(new RunCommand(
                 () -> intake.runWheels(m_operatorController.getRawAxis(2), m_operatorController.getRawAxis(3)),
                 intake));
 
-        spinny.setDefaultCommand(new RunCommand(
+        turret.setDefaultCommand(new RunCommand(
                 () -> {
-                        spinny.spin(m_driverController.getRawAxis(2), m_driverController.getRawAxis(3));                        
-                        spinny.maintainDirection(m_driverController);
+                        turret.spin(m_driverController.getRawAxis(2), m_driverController.getRawAxis(3));                        
                         
                         // rumble controller if vision sees targets also how do u make it not rumble constnatly
                         if (vision.hasTargets() == true) {
                                 m_driverController.setRumble(RumbleType.kLeftRumble, 0.3);
+                        } else {
+                                m_driverController.setRumble(RumbleType.kLeftRumble, 0);
                         }
                 },
-                spinny));
+                turret));
 
         
 
@@ -132,14 +133,14 @@ public class RobotContainer {
         new JoystickButton(m_operatorController, 9).whileHeld(new RunCommand(() -> shooter.runHood(0), shooter));
         new JoystickButton(m_operatorController, 10).whileHeld(new RunCommand(() -> shooter.runHood(1), shooter));
         new JoystickButton(m_operatorController, 6)
-                .whenPressed(new RunCommand(() -> zoom.feedShooter(0.8, shooter.atSpeed()), zoom))
-                .whenReleased(new RunCommand(zoom::autoIndex, zoom));
-        new JoystickButton(m_operatorController, 5).whenPressed(new RunCommand(() -> zoom.manualControl(-1), zoom))
-                .whenReleased(new RunCommand(zoom::autoIndex, zoom));
+                .whenPressed(new RunCommand(() -> conveyor.feedShooter(0.8, shooter.atSpeed()), conveyor))
+                .whenReleased(new RunCommand(conveyor::autoIndex, conveyor));
+        new JoystickButton(m_operatorController, 5).whenPressed(new RunCommand(() -> conveyor.manualControl(-1), conveyor))
+                .whenReleased(new RunCommand(conveyor::autoIndex, conveyor));
+        // should be start button for camera to find target idk what number is so fix it
+        new JoystickButton(m_operatorController, 7).whenHeld(new InstantCommand(turret::visionTurret, turret));
         
-        // should be start button idk what number is so fix it
-        new JoystickButton(m_operatorController, 12).whenHeld(new InstantCommand(spinny::visionTurret, spinny));
-    }
+}
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -180,7 +181,7 @@ public class RobotContainer {
 
         Command shootCommand = new InstantCommand(() -> shooter.setHood(0.5), shooter)
                                 .andThen(shooter::runShooter, shooter)
-                                .andThen(new RunCommand(() -> zoom.feedShooter(0.75, shooter.atSpeed()), zoom))
+                                .andThen(new RunCommand(() -> conveyor.feedShooter(0.75, shooter.atSpeed()), conveyor))
                                 .withTimeout(15).andThen(new InstantCommand(shooter::stopShooter, shooter));
 
         return swerveControllerCommand1.andThen(() -> swerveDrive.drive(0, 0, 0, false)).andThen(shootCommand);
