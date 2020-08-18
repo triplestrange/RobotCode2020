@@ -105,11 +105,11 @@ public class RobotContainer {
                         turret.spin(m_driverController.getRawAxis(2), m_driverController.getRawAxis(3));                        
                         
                         // rumble controller if vision sees targets also how do u make it not rumble constnatly
-                        if (vision.hasTargets() == true) {
-                                m_driverController.setRumble(RumbleType.kLeftRumble, 0.3);
-                        } else {
-                                m_driverController.setRumble(RumbleType.kLeftRumble, 0);
-                        }
+                        // if (vision.hasTargets() == true) {
+                        //         m_driverController.setRumble(RumbleType.kLeftRumble, 0.3);
+                        // } else {
+                        //         m_driverController.setRumble(RumbleType.kLeftRumble, 0);
+                        // }
                 },
                 turret));
 
@@ -138,7 +138,7 @@ public class RobotContainer {
         new JoystickButton(m_operatorController, 5).whenPressed(new RunCommand(() -> conveyor.manualControl(-1), conveyor))
                 .whenReleased(new RunCommand(conveyor::autoIndex, conveyor));
         // should be start button for camera to find target idk what number is so fix it
-        new JoystickButton(m_operatorController, 7).whenHeld(new InstantCommand(turret::visionTurret, turret));
+        // new JoystickButton(m_operatorController, 7).whenHeld(new InstantCommand(turret::visionTurret, turret));
         
 }
 

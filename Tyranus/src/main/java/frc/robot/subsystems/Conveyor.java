@@ -15,7 +15,7 @@ public class Conveyor extends SubsystemBase {
     
   public Conveyor() {
     motor.restoreFactoryDefaults();
-    motor.setIdleMode(IdleMode.kBrake);
+    motor.setIdleMode(IdleMode.kBrake); 
     motor.burnFlash();
 
   }

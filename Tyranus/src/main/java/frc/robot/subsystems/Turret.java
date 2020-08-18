@@ -124,13 +124,13 @@ public class Turret extends SubsystemBase {
       m_turretPIDController.setReference(targetPosition, ControlType.kPosition);
   }
 
-  public void visionTurret() {
-    double targetYaw = vision.getTargetYaw();
+  // public void visionTurret() {
+  //   double targetYaw = vision.getTargetYaw();
     
-    visionController.setSetpoint(0);
-    double speed = visionController.calculate(targetYaw);
-    turretMotor.set(speed);
-  }
+  //   visionController.setSetpoint(0);
+  //   double speed = visionController.calculate(targetYaw);
+  //   turretMotor.set(speed);
+  // }
 
 
 }
