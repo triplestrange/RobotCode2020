@@ -91,9 +91,9 @@ public class RobotContainer {
         swerveDrive.setDefaultCommand(
 
                 new RunCommand(() -> swerveDrive.drive(
-                        -m_driverController.getRawAxis(1) * Constants.SwerveDriveConstants.kMaxSpeedMetersPerSecond,
-                        -m_driverController.getRawAxis(0) * Constants.SwerveDriveConstants.kMaxSpeedMetersPerSecond,
-                        -m_driverController.getRawAxis(4) * (Math.PI), true), swerveDrive));
+                        m_driverController.getRawAxis(1) * Constants.SwerveDriveConstants.kMaxSpeedMetersPerSecond,
+                        m_driverController.getRawAxis(0) * Constants.SwerveDriveConstants.kMaxSpeedMetersPerSecond,
+                        m_driverController.getRawAxis(4) * (Math.PI), true), swerveDrive));
 
         conveyor.setDefaultCommand(new RunCommand(conveyor::autoIndex, conveyor));
         intake.setDefaultCommand(new RunCommand(
@@ -133,10 +133,12 @@ public class RobotContainer {
         new JoystickButton(m_operatorController, 9).whileHeld(new RunCommand(() -> shooter.runHood(0), shooter));
         new JoystickButton(m_operatorController, 10).whileHeld(new RunCommand(() -> shooter.runHood(1), shooter));
         new JoystickButton(m_operatorController, 6)
-                .whenPressed(new RunCommand(() -> conveyor.feedShooter(0.8, shooter.atSpeed()), conveyor))
+                .whileHeld(new RunCommand(() -> conveyor.feedShooter(0.8, shooter.atSpeed()), conveyor))
                 .whenReleased(new RunCommand(conveyor::autoIndex, conveyor));
-        new JoystickButton(m_operatorController, 5).whenPressed(new RunCommand(() -> conveyor.manualControl(-1), conveyor))
+        new JoystickButton(m_operatorController, 5).whenPressed(new RunCommand(() -> conveyor.manualControl(1), conveyor))
                 .whenReleased(new RunCommand(conveyor::autoIndex, conveyor));
+        //new JoystickButton(m_operatorController, 4).whenPressed(new RunCommand(() -> conveyor.manualControl(-), conveyor))
+        //        .whenReleased(new RunCommand(conveyor::autoIndex, conveyor));
         // should be start button for camera to find target idk what number is so fix it
         // new JoystickButton(m_operatorController, 7).whenHeld(new InstantCommand(turret::visionTurret, turret));
         

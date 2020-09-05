@@ -21,28 +21,33 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 public class Vision extends SubsystemBase {
-    public final PhotonCamera camera = new PhotonCamera("MyCamera");
+    // public final PhotonCamera camera = new PhotonCamera("MyCamera");
 
     
     public Vision() {
+        // PhotonPipelineResult result = camera.getLatestResult();
+
+
+        // List<PhotonTrackedTarget> targets = result.getTargets();
+        // PhotonTrackedTarget target = targets.get(0);
 
         // Get the yaw, pitch, and area from the camera.
-        double yaw = camera.getBestTargetYaw();
-        double pitch = camera.getBestTargetPitch();
-        double area = camera.getBestTargetArea();
+        // double yaw = camera.getBestTargetYaw();
+        // double pitch = camera.getBestTargetPitch();
+        // double area = camera.getBestTargetArea();
 
-        PhotonPipelineResult result = camera.getLatestResult();
+        // PhotonPipelineResult result = camera.getLatestResult();
 
-        camera.setDriverMode(true);
-        camera.setPipelineIndex(2);
+        // camera.setDriverMode(true);
+        // camera.setPipelineIndex(2);
 
         // Check if the latest result has any targets.
-        boolean hasTargets = result.hasTargets();
+        // boolean hasTargets = result.hasTargets();
 
         // Get a list of currently tracked targets.
 
         // Get the pipeline latency.
-        double latencySeconds = result.getLatencyMillis() / 1000.0;
+        // double latencySeconds = result.getLatencyMillis() / 1000.0;
 
         // Get information from target.
         // double targetYaw = target.getYaw();
@@ -53,33 +58,33 @@ public class Vision extends SubsystemBase {
 
 
         // Get distance to target.
-        double distanceMeters = PhotonUtils.calculateDistanceToTargetMeters(
-                Constants.Vision.kCameraHeight, Constants.Vision.kTargetHeight, 
-                Constants.Vision.kCameraPitch, Math.toRadians(camera.getBestTargetPitch()));
+        // double distanceMeters = PhotonUtils.calculateDistanceToTargetMeters(
+        //         Constants.Vision.kCameraHeight, Constants.Vision.kTargetHeight, 
+        //         Constants.Vision.kCameraPitch, Math.toRadians(camera.getBestTargetPitch()));
         // Calculate a translation from the camera to the target.
-        Translation2d translation = PhotonUtils.estimateTargetTranslation2d(
-                distanceMeters, Rotation2d.fromDegrees(-camera.getBestTargetYaw()));
+        // Translation2d translation = PhotonUtils.estimateTargetTranslation2d(
+        //         distanceMeters, Rotation2d.fromDegrees(-camera.getBestTargetYaw()));
 
 
 
     }
     
-    public double getTargetYaw() {
-        PhotonPipelineResult result = camera.getLatestResult();
-        List<PhotonTrackedTarget> targets = result.getTargets();
-        PhotonTrackedTarget target = targets.get(0);
+    // public double getTargetYaw() {
+    //     PhotonPipelineResult result = camera.getLatestResult();
+    //     List<Ph otonTrackedTarget> targets = result.getTargets();
+    //     PhotonTrackedTarget target = targets.get(0);
 
-        double targetYaw = target.getYaw();
+    //     double targetYaw = target.getYaw();
         
-        return targetYaw;
-    }   
+    //     return targetYaw;
+    // }   
 
-    public boolean hasTargets() {
-        PhotonPipelineResult result = camera.getLatestResult();
+    // public boolean hasTargets() {
+    //     PhotonPipelineResult result = camera.getLatestResult();
 
-        boolean hasTargets = result.hasTargets();
+    //     boolean hasTargets = result.hasTargets();
 
-        return hasTargets;
-    }
+    //     return hasTargets;
+    // }
 
 } 

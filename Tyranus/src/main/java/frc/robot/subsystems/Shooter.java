@@ -67,6 +67,7 @@ public class Shooter extends SubsystemBase {
   public void runShooter() {
     setPoint = SmartDashboard.getNumber("Shooter Velocity", 4550);
 
+    m_pidController.setP(30);
     m_pidController.setReference(setPoint, ControlType.kVelocity);
     
     SmartDashboard.putNumber("SetPoint", setPoint);
