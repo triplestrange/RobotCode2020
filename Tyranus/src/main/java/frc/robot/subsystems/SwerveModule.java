@@ -30,10 +30,12 @@ public class SwerveModule {
   final CANEncoder m_turningEncoder;
   final CANAnalog m_absoluteEncoder;
 
+  // final AbsoluteEncoder absoluteEncoder;
 
   // steering pid
   private CANPIDController m_pidController;
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
+  public AbsoluteEncoder steerEncoder;
 
   //drive pid
   // private CANPIDController m_drivepidController;
@@ -45,7 +47,9 @@ public class SwerveModule {
    * @param driveMotorChannel   ID for the drive motor.
    * @param turningMotorChannel ID for the turning motor.
    */
-  public SwerveModule(int driveMotorChannel, int turningMotorChannel, double encoderCPR, boolean turningEncoderReversed) {
+  public SwerveModule(int driveMotorChannel, int turningMotorChannel, AbsoluteEncoder steerEncoder, double encoderCPR, boolean turningEncoderReversed) {
+
+    this.steerEncoder = steerEncoder;
 
     m_driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
     m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);

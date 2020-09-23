@@ -8,6 +8,9 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -27,14 +30,19 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   // private CANCoder hoodEncoder = new CANCoder(0);
-
+  NetworkTableEntry xEntry;
+  NetworkTableEntry yEntry;
   // CANCoderConfiguration _canCoderConfiguration = new CANCoderConfiguration();
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
     CameraServer.getInstance().startAutomaticCapture().setResolution(320, 160);
-
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    NetworkTable table = inst.getTable("datatable");
+    xEntry = table.getEntry("X");
+    yEntry = table.getEntry("Y");
+    
     // hoodEncoder.configAllSettings(_canCoderConfiguration);
       }
 
@@ -43,7 +51,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     // SmartDashboard.putNumber("hoodEncoder", hoodEncoder.getPosition());
     // SmartDashboard.putNumber("hoodVoltage", hoodEncoder.getBusVoltage());
-}
+  }
 
   @Override
   public void disabledInit() {
@@ -78,9 +86,15 @@ public class Robot extends TimedRobot {
     // RobotContainer.swerveDrive.resetEncoders();
   }
 
+  double x = 0;
+  double y = 0;
   @Override
   public void teleopPeriodic() {
+    xEntry.setDouble(x);
+    yEntry.setDouble(y);
 
+    x += 0.05;
+    y += 1.0;
   }
 
   @Override

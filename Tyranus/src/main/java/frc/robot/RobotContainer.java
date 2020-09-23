@@ -91,9 +91,9 @@ public class RobotContainer {
         swerveDrive.setDefaultCommand(
 
                 new RunCommand(() -> swerveDrive.drive(
-                        m_driverController.getRawAxis(1) * Constants.SwerveDriveConstants.kMaxSpeedMetersPerSecond,
                         m_driverController.getRawAxis(0) * Constants.SwerveDriveConstants.kMaxSpeedMetersPerSecond,
-                        m_driverController.getRawAxis(4) * (Math.PI), true), swerveDrive));
+                        -m_driverController.getRawAxis(1) * Constants.SwerveDriveConstants.kMaxSpeedMetersPerSecond,
+                        -m_driverController.getRawAxis(4) * (Math.PI), true), swerveDrive));
 
         conveyor.setDefaultCommand(new RunCommand(conveyor::autoIndex, conveyor));
         intake.setDefaultCommand(new RunCommand(
@@ -102,9 +102,9 @@ public class RobotContainer {
 
         turret.setDefaultCommand(new RunCommand(
                 () -> {
-                        turret.spin(m_driverController.getRawAxis(2), m_driverController.getRawAxis(3));                        
+                        turret.spin(false, 0);                       
                         
-                        // rumble controller if vision sees targets also how do u make it not rumble constnatly
+                        // work on rumble later
                         // if (vision.hasTargets() == true) {
                         //         m_driverController.setRumble(RumbleType.kLeftRumble, 0.3);
                         // } else {
@@ -130,13 +130,17 @@ public class RobotContainer {
                 .whenReleased(intake::retract, intake);
         new JoystickButton(m_operatorController, 6).whileHeld(new InstantCommand(shooter::runShooter, shooter))
                 .whenReleased(shooter::stopShooter, shooter);
-        new JoystickButton(m_operatorController, 9).whileHeld(new RunCommand(() -> shooter.runHood(0), shooter));
-        new JoystickButton(m_operatorController, 10).whileHeld(new RunCommand(() -> shooter.runHood(1), shooter));
+         new JoystickButton(m_operatorController, 9).whileHeld(new RunCommand(() -> shooter.runHood(0), shooter));
+         new JoystickButton(m_operatorController, 10).whileHeld(new RunCommand(() -> shooter.runHood(1), shooter));
         new JoystickButton(m_operatorController, 6)
                 .whileHeld(new RunCommand(() -> conveyor.feedShooter(0.8, shooter.atSpeed()), conveyor))
                 .whenReleased(new RunCommand(conveyor::autoIndex, conveyor));
         new JoystickButton(m_operatorController, 5).whenPressed(new RunCommand(() -> conveyor.manualControl(1), conveyor))
                 .whenReleased(new RunCommand(conveyor::autoIndex, conveyor));
+        new JoystickButton(m_operatorController, 2).whileHeld(new RunCommand(() -> turret.spin(true, 0.25)))
+                .whenReleased(new RunCommand(() -> turret.spin(true, 0)));
+        new JoystickButton(m_operatorController, 3).whileHeld(new RunCommand(() -> turret.spin(true, -0.25)))
+                .whenReleased(new RunCommand(() -> turret.spin(true, 0)));
         //new JoystickButton(m_operatorController, 4).whenPressed(new RunCommand(() -> conveyor.manualControl(-), conveyor))
         //        .whenReleased(new RunCommand(conveyor::autoIndex, conveyor));
         // should be start button for camera to find target idk what number is so fix it
@@ -181,10 +185,12 @@ public class RobotContainer {
 
         );
 
-        Command shootCommand = new InstantCommand(() -> shooter.setHood(0.5), shooter)
+        Command shootCommand = new InstantCommand(() -> shooter.runHood(.5), shooter)
                                 .andThen(shooter::runShooter, shooter)
                                 .andThen(new RunCommand(() -> conveyor.feedShooter(0.75, shooter.atSpeed()), conveyor))
                                 .withTimeout(15).andThen(new InstantCommand(shooter::stopShooter, shooter));
+
+        
 
         return swerveControllerCommand1.andThen(() -> swerveDrive.drive(0, 0, 0, false)).andThen(shootCommand);
 

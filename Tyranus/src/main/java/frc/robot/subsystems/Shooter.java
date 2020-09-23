@@ -24,7 +24,7 @@ public class Shooter extends SubsystemBase {
   private final Servo hoodServo;
   private CANPIDController m_pidController;
   private CANEncoder m_encoder;
-  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, setPoint, speed;
+  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, setPoint, speed, hoodPos;
 
   public Shooter() {
     shooter1 = new CANSparkMax(12, MotorType.kBrushless);
@@ -53,6 +53,8 @@ public class Shooter extends SubsystemBase {
     kMinOutput = 0.8;
     maxRPM = 5676.0;
     speed = 4550.0;
+    // hoodPos = .25;
+
     m_pidController.setP(kP);
     m_pidController.setI(kI);
     m_pidController.setD(kD);
@@ -61,7 +63,7 @@ public class Shooter extends SubsystemBase {
     m_pidController.setOutputRange(kMinOutput, kMaxOutput);
     SmartDashboard.putNumber("Shooter P", kP);
     SmartDashboard.putNumber("Shooter Velocity", speed);
-
+    // SmartDashboard.putNumber("Hood Position", hoodPos);
   }
 
   public void runShooter() {
@@ -89,6 +91,7 @@ public class Shooter extends SubsystemBase {
     } else if (pos == 1) {
       hoodServo.set(currentPos + 0.01);
     }
+    
   }
 
   public void setHood(double pos) {
@@ -97,9 +100,10 @@ public class Shooter extends SubsystemBase {
 
 
   public void periodic() {
+    
     SmartDashboard.putNumber("ProcessVariable", m_encoder.getVelocity());
-    SmartDashboard.putNumber("SHOOTER HOODS POS", hoodServo.get());
-    SmartDashboard.putNumber("SHOOTER HOODS ANGLE", hoodServo.getAngle());
+    SmartDashboard.putNumber("SHOOTER HOOD POS", hoodServo.get());
+    SmartDashboard.putNumber("SHOOTER HOOD ANGLE", hoodServo.getAngle());
   }
   public boolean atSpeed() {
     return Math.abs(setPoint - m_encoder.getVelocity())<300; // play with the number (go up to 1,000)

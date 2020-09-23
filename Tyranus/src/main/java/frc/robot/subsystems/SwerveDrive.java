@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 
@@ -28,12 +29,14 @@ public class SwerveDrive extends SubsystemBase {
   private final SwerveModule m_frontLeft
       = new SwerveModule(SwerveDriveConstants.frontLeftDrive,
                          SwerveDriveConstants.frontLeftSteer,
+                         new AbsoluteEncoder(Constants.ModuleConstants.FL_ENCODER, Constants.ModuleConstants.FL_ENC_OFFSET),
                          ModuleConstants.kAbsoluteFL,
                          SwerveDriveConstants.frontLeftSteerEncoderReversed);
 
   private final SwerveModule m_rearLeft =
       new SwerveModule(SwerveDriveConstants.backLeftDrive,
                        SwerveDriveConstants.backLeftSteer,
+                       new AbsoluteEncoder(Constants.ModuleConstants.BL_ENCODER, Constants.ModuleConstants.BL_ENC_OFFSET),
                        ModuleConstants.kAbsoluteBL,
                        SwerveDriveConstants.backLeftSteerEncoderReversed);
 
@@ -41,12 +44,14 @@ public class SwerveDrive extends SubsystemBase {
   private final SwerveModule m_frontRight =
       new SwerveModule(SwerveDriveConstants.frontRightDrive,
                        SwerveDriveConstants.frontRightSteer,
+                       new AbsoluteEncoder(Constants.ModuleConstants.FR_ENCODER, Constants.ModuleConstants.FR_ENC_OFFSET),
                        ModuleConstants.kAbsoluteFR,
                        SwerveDriveConstants.frontRightSteerEncoderReversed);
 
   private final SwerveModule m_rearRight =
       new SwerveModule(SwerveDriveConstants.backRightDrive,
                        SwerveDriveConstants.backRightSteer,
+                       new AbsoluteEncoder(Constants.ModuleConstants.BL_ENCODER, Constants.ModuleConstants.BL_ENC_OFFSET),
                        ModuleConstants.kAbsoluteBR,
                        SwerveDriveConstants.backRightSteerEncoderReversed);
 
@@ -82,10 +87,10 @@ public class SwerveDrive extends SubsystemBase {
         m_rearLeft.getState(),
         m_frontRight.getState(),
         m_rearRight.getState());
-        SmartDashboard.putNumber("FLSteering", m_frontLeft.m_absoluteEncoder.getPosition());
-        SmartDashboard.putNumber("FRSteering", m_frontRight.m_absoluteEncoder.getPosition());
-        SmartDashboard.putNumber("BLSteering", m_rearLeft.m_absoluteEncoder.getPosition());
-        SmartDashboard.putNumber("BRSteering", m_rearRight.m_absoluteEncoder.getPosition());
+        SmartDashboard.putNumber("FLSteering", m_frontLeft.steerEncoder.getAngle()); //m_frontLeft.m_absoluteEncoder.getPosition());
+        SmartDashboard.putNumber("FRSteering", m_frontRight.steerEncoder.getAngle()); //m_frontRight.m_absoluteEncoder.getPosition());
+        SmartDashboard.putNumber("BLSteering", m_rearLeft.steerEncoder.getAngle()); //m_rearLeft.m_absoluteEncoder.getPosition());
+        SmartDashboard.putNumber("BRSteering", m_rearRight.steerEncoder.getAngle()); //m_rearRight.m_absoluteEncoder.getPosition());
         SmartDashboard.putNumber("FLneo", m_frontLeft.getState().angle.getRadians());
         SmartDashboard.putNumber("FRneo", m_frontRight.getState().angle.getRadians());
         SmartDashboard.putNumber("BLneo", m_rearLeft.getState().angle.getRadians());

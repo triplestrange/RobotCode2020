@@ -91,6 +91,15 @@ public final class Constants {
     public static final double kAbsoluteBL = (2*Math.PI)/3.30;
     public static final double kAbsoluteBR = (2*Math.PI)/3.312;
    
+    public static final int FL_ENCODER = 0;
+    public static final int FR_ENCODER = 1;
+    public static final int BL_ENCODER = 2;
+    public static final int BR_ENCODER = 3;
+
+    public final static double FL_ENC_OFFSET = 183;
+    public final static double FR_ENC_OFFSET = 179;
+    public final static double BL_ENC_OFFSET = 221;
+    public final static double BR_ENC_OFFSET = 241;
   }
 
   public static final class OIConstants {
@@ -183,7 +192,7 @@ public final class Constants {
   }
 
   public static final class Vision {
-    public static final double kCameraHeight = 0.23; // meter
+    public static final double kCameraHeight = 0.23; // meter -- REMEASURE
     public static final double kCameraPitch = 0.436; // radians
     public static final double kTargetHeight = 2.06; // meters 
     

@@ -12,11 +12,13 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANEncoder;
+import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
@@ -25,6 +27,7 @@ import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
+
 
 public class Turret extends SubsystemBase {
 
@@ -38,6 +41,7 @@ public class Turret extends SubsystemBase {
   private DigitalInput limitSwitch;
   public Vision vision;
   public SwerveDrive swerve;
+  
   private PIDController visionController = new PIDController(Constants.Vision.turretKP, Constants.Vision.turretKI, Constants.Vision.turretKD);
   /**
    * Creates a new Turret.
@@ -104,24 +108,22 @@ public class Turret extends SubsystemBase {
     turretMotor.set(0);
   }
 
-  public void spin(final double left, final double right) {
+  public void spin(boolean manual, double speed) {
     double robotHeading = swerve.getHeading();
 
     double targetPosition = 0;
-    
+
     if (robotHeading < 0 && robotHeading > -180 ) {
       targetPosition = -robotHeading;
     } else if (robotHeading > 0 && robotHeading < 180) {
       targetPosition = 360 - robotHeading;
-
     } 
 
-    if (left > 0.1)
-      turretMotor.set(-left / 2);
-    else if (right > 0.1)
-      turretMotor.set(right);
+    if (manual)
+      turretMotor.set(speed);
      else
-      m_turretPIDController.setReference(targetPosition, ControlType.kPosition);
+      // turretMotor.set(0);
+        m_turretPIDController.setReference(targetPosition, ControlType.kPosition);
   }
 
   // public void visionTurret() {
