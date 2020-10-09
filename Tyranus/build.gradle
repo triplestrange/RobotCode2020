@@ -60,7 +60,7 @@ dependencies {
 
     // Network Table Dependencies
     // Add ntcore-java
-    compile "edu.wpi.first.ntcore:ntcore-java:3.2"
+    compile "edu.wpi.first.ntcore:ntcore-java:3.2" 
 
     // Add wpiutil-java
     compile "edu.wpi.first.wpiutil:wpiutil-java:3.2"
@@ -68,7 +68,7 @@ dependencies {
     // Add ntcore-jni for runtime. We are adding all supported platforms
     // so that our application will work on all supported platforms.
     runtime "edu.wpi.first.ntcore:ntcore-jni:3.2:windowsx86"
-    runtime "edu.wpi.first.ntcore:ntcore-jni:3.2:windowsx86-64"
+    // runtime "edu.wpi.first.ntcore:ntcore-jni:3.2:windowsx86-64"
     runtime "edu.wpi.first.ntcore:ntcore-jni:3.2:linuxx86-64"
     runtime "edu.wpi.first.ntcore:ntcore-jni:3.2:osxx86-64"
 }

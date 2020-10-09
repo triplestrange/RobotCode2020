@@ -2,12 +2,12 @@ package frc.robot.subsystems;
 
 import frc.robot.Robot;
 import frc.robot.Constants;
-import frc.robot.PhotonCamera2;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive;
 
 import java.util.List;
 
+import org.photonvision.PhotonCamera;
 // import org.photonvision.PhotonCamera2;
 // import org.photonvision.PhotonCamera.SimplePipelineResult;
 import org.photonvision.PhotonPipelineResult;
@@ -17,12 +17,13 @@ import org.photonvision.PhotonUtils;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 public class Vision extends SubsystemBase {
-    public final PhotonCamera2 camera = new PhotonCamera2("MyCamera");
+    public final PhotonCamera camera = new PhotonCamera("MyCamera");
 
     
     public Vision() {
@@ -38,26 +39,26 @@ public class Vision extends SubsystemBase {
      double area = camera.getBestTargetArea();
 
      
-         camera.setDriverMode(true);
-         camera.setPipelineIndex(2);
+        camera.setDriverMode(true);
+        camera.setPipelineIndex(2);
 
         // Check if the latest result has any targets.
-         boolean hasTargets = result.hasTargets();
+        boolean hasTargets = result.hasTargets();
 
         // Get a list of currently tracked targets.
-
         // Get the pipeline latency.
-         double latencySeconds = result.getLatencyMillis() / 1000.0;
+        double latencySeconds = result.getLatencyMillis() / 1000.0;
 
         // Get information from target.
-         double targetYaw = target.getYaw();
-         double targetPitch = target.getPitch();
-         double targetArea = target.getArea();
-         double targetSkew = target.getSkew();
-         Pose2d pose = target.getRobotRelativePose();
+        double targetYaw = target.getYaw();
+        double targetPitch = target.getPitch();
+        double targetArea = target.getArea();
+        double targetSkew = target.getSkew();
+        Transform2d pose = target.getCameraToTarget();
+        // Pose2d pose = target.getRobotRelativePose();
 
 
-       // Get distance to target.
+        // Get distance to target.
         double distanceMeters = PhotonUtils.calculateDistanceToTargetMeters(
                 Constants.Vision.kCameraHeight, Constants.Vision.kTargetHeight, 
                 Constants.Vision.kCameraPitch, Math.toRadians(camera.getBestTargetPitch()));
